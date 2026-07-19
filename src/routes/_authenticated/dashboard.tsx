@@ -38,14 +38,21 @@ function Dashboard() {
   const streak = stats?.current_streak ?? 0;
   const xpInLevel = xp % 100;
 
+  const nextExam = events.find((e) => e.event_type === "exam");
+  const daysToExam = nextExam ? Math.max(0, Math.ceil((new Date(nextExam.event_date).getTime() - Date.now()) / 86400000)) : null;
+
   const shortcuts = [
+    { to: "/tutor", label: "AI Tutor", icon: Lightbulb, color: "from-primary/30 to-primary/10" },
+    { to: "/exam", label: "Exam Mode", icon: GraduationCap, color: "from-accent/30 to-accent/10" },
+    { to: "/career", label: "Career", icon: Briefcase, color: "from-pink-500/30 to-pink-500/10" },
+    { to: "/insights", label: "Insights", icon: Sparkles, color: "from-orange-500/30 to-orange-500/10" },
+    { to: "/brain", label: "Second Brain", icon: Brain, color: "from-primary/30 to-accent/20" },
     { to: "/chat", label: "AI Chat", icon: MessageSquare, color: "from-primary/30 to-primary/10" },
     { to: "/notes", label: "Summarize", icon: FileText, color: "from-accent/30 to-accent/10" },
     { to: "/voice-notes", label: "Voice Notes", icon: Mic, color: "from-pink-500/30 to-pink-500/10" },
     { to: "/focus", label: "Focus Timer", icon: Timer, color: "from-orange-500/30 to-orange-500/10" },
     { to: "/tasks", label: "Tasks", icon: ListChecks, color: "from-success/30 to-success/10" },
     { to: "/flashcards", label: "Flashcards", icon: Layers, color: "from-warning/30 to-warning/10" },
-    { to: "/planner", label: "Planner", icon: CalendarIcon, color: "from-primary/30 to-accent/20" },
     { to: "/assignments", label: "Assignments", icon: BookOpen, color: "from-accent/30 to-primary/10" },
   ] as const;
 
