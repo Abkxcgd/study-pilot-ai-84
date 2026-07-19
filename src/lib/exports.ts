@@ -46,5 +46,5 @@ export async function exportDocx(title: string, body: string) {
 }
 
 function sanitize(s: string) {
-  return (s || "document").replace(/[^\w\-]+/g, "_").slice(0, 60);
+  return (s || "document").replace(/[^\w-]+/g, "_").slice(0, 60);
 }

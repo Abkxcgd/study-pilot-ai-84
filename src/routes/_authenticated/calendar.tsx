@@ -37,13 +37,11 @@ function CalPage() {
   const create = async () => {
     if (!form.title || !form.event_date) return toast.error("Title and date required");
     const { data: u } = await supabase.auth.getUser();
-    const { error } = await supabase
-      .from("events")
-      .insert({
-        ...form,
-        event_date: new Date(form.event_date).toISOString(),
-        user_id: u.user!.id,
-      });
+    const { error } = await supabase.from("events").insert({
+      ...form,
+      event_date: new Date(form.event_date).toISOString(),
+      user_id: u.user!.id,
+    });
     if (error) return toast.error(error.message);
     toast.success("Event added");
     setOpen(false);

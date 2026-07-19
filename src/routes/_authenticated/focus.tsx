@@ -61,7 +61,9 @@ function FocusPage() {
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
       o.start();
       o.stop(ctx.currentTime + 0.6);
-    } catch {}
+    } catch {
+      // Audio unsupported — silent fallback
+    }
   };
 
   const recordSession = async (minutes: number) => {
