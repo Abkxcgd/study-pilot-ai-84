@@ -30,19 +30,19 @@ export async function seedDemoData() {
   const notes = [
     {
       title: "Machine Learning — Bias vs Variance",
-      content: "High bias means the model is too simple; high variance means it overfits. Regularization (L1, L2) reduces variance. Cross-validation helps estimate generalization error.",
+      source_text: "High bias means the model is too simple; high variance means it overfits. Regularization (L1, L2) reduces variance. Cross-validation helps estimate generalization error.",
       summary: "Bias/variance tradeoff explains under- vs overfitting. Use regularization and cross-validation.",
       key_points: ["Bias = underfitting", "Variance = overfitting", "L1/L2 regularization", "K-fold cross-validation"],
     },
     {
       title: "Data Structures — Big-O Cheatsheet",
-      content: "Arrays: O(1) access, O(n) search. HashMap: O(1) avg lookup. BST: O(log n) balanced. Sorting: mergesort O(n log n).",
+      source_text: "Arrays: O(1) access, O(n) search. HashMap: O(1) avg lookup. BST: O(log n) balanced. Sorting: mergesort O(n log n).",
       summary: "Time complexity reference for core data structures and sorting algorithms.",
       key_points: ["Array O(1) access", "HashMap O(1) avg", "BST O(log n)", "Mergesort O(n log n)"],
     },
     {
       title: "Databases — Normalization",
-      content: "1NF: atomic values. 2NF: no partial dependency. 3NF: no transitive dependency. BCNF: stricter 3NF.",
+      source_text: "1NF: atomic values. 2NF: no partial dependency. 3NF: no transitive dependency. BCNF: stricter 3NF.",
       summary: "Normal forms reduce redundancy in relational schemas.",
       key_points: ["1NF atomic", "2NF no partial dep", "3NF no transitive dep", "BCNF"],
     },
