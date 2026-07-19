@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { AskAiFab } from "@/components/AskAiFab";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -116,6 +117,7 @@ function AuthedLayout() {
         </header>
         <main key={location} className="p-4 sm:p-6 lg:p-8"><Outlet /></main>
       </div>
+      <AskAiFab />
     </div>
   );
 }
