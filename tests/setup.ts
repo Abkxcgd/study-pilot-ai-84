@@ -29,6 +29,7 @@ globalThis.ResizeObserver = globalThis.ResizeObserver || RO;
 globalThis.IntersectionObserver = globalThis.IntersectionObserver || RO;
 
 // jsdom lacks scrollIntoView
-if (typeof Element !== "undefined" && !Element.prototype.scrollIntoView) {
-  Element.prototype.scrollIntoView = function () {};
+if (typeof window !== "undefined") {
+  (window.HTMLElement.prototype as any).scrollIntoView = function () {};
+  (window.Element.prototype as any).scrollIntoView = function () {};
 }
