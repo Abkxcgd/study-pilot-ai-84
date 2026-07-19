@@ -5,13 +5,109 @@ import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 
 const MODEL = "google/gemini-3.5-flash";
+const EMBED_MODEL = "openai/text-embedding-3-small";
 
-function getModel() {
+function getKey() {
   const key = process.env.LOVABLE_API_KEY;
   if (!key) throw new Error("Missing LOVABLE_API_KEY");
-  const gw = createLovableAiGatewayProvider(key);
+  return key;
+}
+
+function getModel() {
+  const gw = createLovableAiGatewayProvider(getKey());
   return gw(MODEL);
 }
+
+async function embed(text: string): Promise<number[]> {
+  const res = await fetch("https://ai.gateway.lovable.dev/v1/embeddings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getKey()}`,
+    },
+    body: JSON.stringify({ model: EMBED_MODEL, input: text.slice(0, 8000) }),
+  });
+  if (!res.ok) throw new Error(`Embedding failed: ${res.status} ${await res.text()}`);
+  const json = (await res.json()) as { data: { embedding: number[] }[] };
+  return json.data[0].embedding;
+}
+
+function chunk(text: string, size = 800): string[] {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (!clean) return [];
+  const out: string[] = [];
+  for (let i = 0; i < clean.length; i += size) out.push(clean.slice(i, i + size));
+  return out.slice(0, 30);
+}
+
+const IngestInput = z.object({
+  sourceType: z.enum(["note", "task", "event", "custom"]),
+  sourceId: z.string().uuid().optional(),
+  title: z.string().optional(),
+  content: z.string().min(1),
+});
+
+export const aiIngest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => IngestInput.parse(v))
+  .handler(async ({ data, context }) => {
+    const chunks = chunk(data.content);
+    if (chunks.length === 0) return { inserted: 0 };
+    // Remove previous embeddings for the same source
+    if (data.sourceId) {
+      await context.supabase.from("embeddings").delete().eq("source_id", data.sourceId);
+    }
+    const rows = await Promise.all(
+      chunks.map(async (c) => ({
+        user_id: context.userId,
+        source_type: data.sourceType,
+        source_id: data.sourceId ?? null,
+        content: c,
+        metadata: { title: data.title ?? null },
+        embedding: await embed(c),
+      })),
+    );
+    const { error } = await context.supabase.from("embeddings").insert(rows as never);
+    if (error) throw new Error(error.message);
+    return { inserted: rows.length };
+  });
+
+const AskInput = z.object({ question: z.string().min(2) });
+
+export const aiSecondBrain = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => AskInput.parse(v))
+  .handler(async ({ data, context }) => {
+    const qVec = await embed(data.question);
+    const { data: matches, error } = await context.supabase.rpc("match_embeddings", {
+      query_embedding: qVec as never,
+      match_user: context.userId,
+      match_count: 8,
+    });
+    if (error) throw new Error(error.message);
+    const ctx = (matches ?? [])
+      .map((m: { source_type: string; content: string }, i: number) => `[#${i + 1} ${m.source_type}] ${m.content}`)
+      .join("\n\n");
+    const system =
+      "You are the student's Second Brain. Answer using ONLY the provided context from their notes, tasks, and events. Cite sources like [#1]. If the answer is not in the context, say so and suggest what to upload.";
+    const { text } = await generateText({
+      model: getModel(),
+      system,
+      prompt: `CONTEXT:\n${ctx || "(empty)"}\n\nQUESTION: ${data.question}`,
+    });
+    return {
+      answer: text,
+      sources: (matches ?? []) as Array<{
+        id: string;
+        source_type: string;
+        source_id: string | null;
+        content: string;
+        similarity: number;
+        metadata: { title?: string | null };
+      }>,
+    };
+  });
+
 
 const ChatInput = z.object({
   messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string() })),

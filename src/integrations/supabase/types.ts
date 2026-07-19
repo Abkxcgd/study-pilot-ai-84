@@ -73,6 +73,39 @@ export type Database = {
         }
         Relationships: []
       }
+      embeddings: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string
+          id: string
+          metadata: Json
+          source_id: string | null
+          source_type: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          embedding: string
+          id?: string
+          metadata?: Json
+          source_id?: string | null
+          source_type: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string
+          id?: string
+          metadata?: Json
+          source_id?: string | null
+          source_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           created_at: string
@@ -365,6 +398,21 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      match_embeddings: {
+        Args: {
+          match_count?: number
+          match_user: string
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          id: string
+          metadata: Json
+          similarity: number
+          source_id: string
+          source_type: string
+        }[]
       }
     }
     Enums: {

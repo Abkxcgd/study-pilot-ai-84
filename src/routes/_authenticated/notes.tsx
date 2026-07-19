@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { aiSummarize } from "@/lib/ai.functions";
+import { aiSummarize, aiIngest } from "@/lib/ai.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ type Result = {
 
 function NotesPage() {
   const summarize = useServerFn(aiSummarize);
+  const ingest = useServerFn(aiIngest);
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
@@ -65,8 +66,9 @@ function NotesPage() {
       const r = (await summarize({ data: { text, title } })) as Result;
       setResult(r);
       const { data: u } = await supabase.auth.getUser();
+      let noteId: string | undefined;
       if (u.user) {
-        await supabase.from("notes").insert({
+        const { data: inserted } = await supabase.from("notes").insert({
           user_id: u.user.id,
           title: title || "Untitled",
           source_text: text.slice(0, 5000),
@@ -74,9 +76,19 @@ function NotesPage() {
           key_points: r.keyPoints ?? [],
           flashcards: r.flashcards ?? [],
           quiz: r.quiz ?? [],
-        });
+        }).select("id").single();
+        noteId = inserted?.id;
       }
       await awardXp(XP.NOTE_SUMMARIZED, "Note summarized");
+      // Index into Second Brain (fire-and-forget)
+      ingest({
+        data: {
+          sourceType: "note",
+          sourceId: noteId,
+          title: title || "Untitled",
+          content: `${r.summary ?? ""}\n\n${text}`,
+        },
+      }).catch(() => {});
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Failed";
       toast.error(msg);
