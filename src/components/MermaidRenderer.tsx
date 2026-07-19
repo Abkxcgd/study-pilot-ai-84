@@ -11,7 +11,12 @@ export default function MermaidRenderer({ code }: { code: string }) {
     (async () => {
       const mermaid = (await import("mermaid")).default;
       if (!initialized) {
-        mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "strict", fontFamily: "Inter, sans-serif" });
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "dark",
+          securityLevel: "strict",
+          fontFamily: "Inter, sans-serif",
+        });
         initialized = true;
       }
       try {
@@ -22,9 +27,21 @@ export default function MermaidRenderer({ code }: { code: string }) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Diagram error");
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [code]);
 
-  if (error) return <pre className="text-xs text-destructive">{error}\n\n{code}</pre>;
-  return <div ref={ref} className="my-4 overflow-x-auto rounded-lg border border-border/40 bg-background/40 p-4" />;
+  if (error)
+    return (
+      <pre className="text-xs text-destructive">
+        {error}\n\n{code}
+      </pre>
+    );
+  return (
+    <div
+      ref={ref}
+      className="my-4 overflow-x-auto rounded-lg border border-border/40 bg-background/40 p-4"
+    />
+  );
 }

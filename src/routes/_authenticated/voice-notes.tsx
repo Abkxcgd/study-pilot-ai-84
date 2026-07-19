@@ -25,14 +25,22 @@ function encodeWav(chunks: Float32Array[], sampleRate: number): Blob {
   }
   const buffer = new ArrayBuffer(44 + pcm.length * 2);
   const view = new DataView(buffer);
-  const writeStr = (o: number, s: string) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
+  const writeStr = (o: number, s: string) => {
+    for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i));
+  };
   writeStr(0, "RIFF");
   view.setUint32(4, 36 + pcm.length * 2, true);
-  writeStr(8, "WAVE"); writeStr(12, "fmt ");
-  view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
-  view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * 2, true);
-  view.setUint16(32, 2, true); view.setUint16(34, 16, true);
-  writeStr(36, "data"); view.setUint32(40, pcm.length * 2, true);
+  writeStr(8, "WAVE");
+  writeStr(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  writeStr(36, "data");
+  view.setUint32(40, pcm.length * 2, true);
   new Int16Array(buffer, 44).set(pcm);
   return new Blob([buffer], { type: "audio/wav" });
 }
@@ -132,7 +140,9 @@ function VoiceNotesPage() {
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Mic className="h-7 w-7 text-primary-glow" /> Voice Notes
         </h1>
-        <p className="text-muted-foreground mt-1">Record a lecture or thought and let AI transcribe & summarize it.</p>
+        <p className="text-muted-foreground mt-1">
+          Record a lecture or thought and let AI transcribe & summarize it.
+        </p>
       </div>
 
       <div className="glass rounded-2xl p-8 text-center">
@@ -145,20 +155,42 @@ function VoiceNotesPage() {
               : "bg-gradient-to-br from-primary to-accent"
           }`}
         >
-          {transcribing ? <Loader2 className="h-10 w-10 animate-spin" /> : recording ? <MicOff className="h-10 w-10" /> : <Mic className="h-10 w-10" />}
+          {transcribing ? (
+            <Loader2 className="h-10 w-10 animate-spin" />
+          ) : recording ? (
+            <MicOff className="h-10 w-10" />
+          ) : (
+            <Mic className="h-10 w-10" />
+          )}
         </button>
         <div className="mt-4 text-sm text-muted-foreground">
-          {transcribing ? "Transcribing…" : recording ? "Recording… tap to stop" : "Tap to start recording"}
+          {transcribing
+            ? "Transcribing…"
+            : recording
+              ? "Recording… tap to stop"
+              : "Tap to start recording"}
         </div>
       </div>
 
       {transcript && (
         <div className="glass rounded-2xl p-6 space-y-4">
-          <Input placeholder="Title (optional)" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <Input
+            placeholder="Title (optional)"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <Textarea rows={8} value={transcript} onChange={(e) => setTranscript(e.target.value)} />
           <div className="flex gap-2">
-            <Button onClick={doSummarize} disabled={summarizing} className="bg-gradient-to-r from-primary to-accent">
-              {summarizing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+            <Button
+              onClick={doSummarize}
+              disabled={summarizing}
+              className="bg-gradient-to-r from-primary to-accent"
+            >
+              {summarizing ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Sparkles className="mr-2 h-4 w-4" />
+              )}
               Summarize & Save
             </Button>
           </div>
@@ -167,11 +199,15 @@ function VoiceNotesPage() {
 
       {summary && (
         <div className="glass rounded-2xl p-6 space-y-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground"><Save className="h-4 w-4" /> Saved to your notes</div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Save className="h-4 w-4" /> Saved to your notes
+          </div>
           <p className="leading-relaxed">{summary.summary}</p>
           {summary.keyPoints && summary.keyPoints.length > 0 && (
             <ul className="list-disc pl-5 space-y-1 text-sm">
-              {summary.keyPoints.map((p, i) => <li key={i}>{p}</li>)}
+              {summary.keyPoints.map((p, i) => (
+                <li key={i}>{p}</li>
+              ))}
             </ul>
           )}
         </div>

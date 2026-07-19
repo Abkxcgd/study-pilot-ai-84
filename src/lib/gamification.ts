@@ -47,13 +47,11 @@ export async function awardXp(points: number, reason?: string) {
     await supabase
       .from("user_badges")
       .insert(newBadges.map((b) => ({ user_id: u.user!.id, badge_key: b.key })));
-    newBadges.forEach((b) =>
-      toast.success(`🏆 Badge unlocked: ${b.label}`, { duration: 4000 })
-    );
+    newBadges.forEach((b) => toast.success(`🏆 Badge unlocked: ${b.label}`, { duration: 4000 }));
   }
   return stats;
 }
 
 export const BADGE_LABELS: Record<string, string> = Object.fromEntries(
-  BADGES.map((b) => [b.key, b.label])
+  BADGES.map((b) => [b.key, b.label]),
 );

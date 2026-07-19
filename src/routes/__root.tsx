@@ -49,10 +49,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">Try again or head back home.</p>
         <div className="mt-6 flex justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >Try again</button>
-          <a href="/" className="rounded-md border border-input bg-background px-4 py-2 text-sm">Go home</a>
+          >
+            Try again
+          </button>
+          <a href="/" className="rounded-md border border-input bg-background px-4 py-2 text-sm">
+            Go home
+          </a>
         </div>
       </div>
     </div>
@@ -65,10 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "StudyPilot AI — Study Smarter. Learn Faster. Achieve More." },
-      { name: "description", content: "The all-in-one AI productivity assistant for students. Chat, summarize notes, plan study sessions, and boost your grades." },
+      {
+        name: "description",
+        content:
+          "The all-in-one AI productivity assistant for students. Chat, summarize notes, plan study sessions, and boost your grades.",
+      },
       { name: "author", content: "StudyPilot AI" },
       { property: "og:title", content: "StudyPilot AI — Your AI Study Companion" },
-      { property: "og:description", content: "Chat with AI, summarize notes, generate assignments, and organize your study life in one beautiful workspace." },
+      {
+        property: "og:description",
+        content:
+          "Chat with AI, summarize notes, generate assignments, and organize your study life in one beautiful workspace.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -76,7 +91,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap",
+      },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
@@ -90,8 +108,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
     </html>
   );
 }

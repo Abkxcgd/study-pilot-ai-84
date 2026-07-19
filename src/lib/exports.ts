@@ -37,7 +37,7 @@ export async function exportDocx(title: string, body: string) {
       (chunk) =>
         new Paragraph({
           children: [new TextRun({ text: chunk.replace(/\n/g, " ") })],
-        })
+        }),
     ),
   ];
   const doc = new Document({ sections: [{ children: paragraphs }] });

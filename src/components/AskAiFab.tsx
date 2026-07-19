@@ -17,12 +17,15 @@ export function AskAiFab() {
   const chat = useServerFn(aiChat);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, open]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [msgs, open]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault(); setOpen((o) => !o);
+        e.preventDefault();
+        setOpen((o) => !o);
       }
       if (e.key === "Escape") setOpen(false);
     };
@@ -42,7 +45,9 @@ export function AskAiFab() {
       setMsgs([...next, { role: "assistant", content: res.text }]);
     } catch (e: any) {
       toast.error(e?.message ?? "Failed to reach AI");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,7 +61,10 @@ export function AskAiFab() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:justify-end p-0 sm:p-6 bg-background/40 backdrop-blur-sm animate-in fade-in" onClick={() => setOpen(false)}>
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:justify-end p-0 sm:p-6 bg-background/40 backdrop-blur-sm animate-in fade-in"
+          onClick={() => setOpen(false)}
+        >
           <div
             onClick={(e) => e.stopPropagation()}
             className="glass w-full sm:w-[420px] h-[80vh] sm:h-[600px] rounded-t-2xl sm:rounded-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-4"
@@ -65,7 +73,9 @@ export function AskAiFab() {
               <div className="flex items-center gap-2 font-semibold">
                 <Sparkles className="h-4 w-4 text-primary-glow" /> Ask AI
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close"><X className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close">
+                <X className="h-4 w-4" />
+              </Button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {msgs.length === 0 && (
@@ -77,14 +87,34 @@ export function AskAiFab() {
               )}
               {msgs.map((m, i) => (
                 <div key={i} className={`flex gap-2 ${m.role === "user" ? "justify-end" : ""}`}>
-                  {m.role === "assistant" && <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/20"><Bot className="h-3.5 w-3.5" /></div>}
-                  <div className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-gradient-to-r from-primary to-accent text-white" : "bg-white/5 border border-border/50"}`}>
-                    {m.role === "assistant" ? <div className="prose prose-invert prose-sm max-w-none"><ReactMarkdown>{m.content}</ReactMarkdown></div> : m.content}
+                  {m.role === "assistant" && (
+                    <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/20">
+                      <Bot className="h-3.5 w-3.5" />
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-gradient-to-r from-primary to-accent text-white" : "bg-white/5 border border-border/50"}`}
+                  >
+                    {m.role === "assistant" ? (
+                      <div className="prose prose-invert prose-sm max-w-none">
+                        <ReactMarkdown>{m.content}</ReactMarkdown>
+                      </div>
+                    ) : (
+                      m.content
+                    )}
                   </div>
-                  {m.role === "user" && <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-accent/20"><User className="h-3.5 w-3.5" /></div>}
+                  {m.role === "user" && (
+                    <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-accent/20">
+                      <User className="h-3.5 w-3.5" />
+                    </div>
+                  )}
                 </div>
               ))}
-              {loading && <div className="flex items-center gap-2 text-xs text-muted-foreground"><Loader2 className="h-3.5 w-3.5 animate-spin" /> Thinking…</div>}
+              {loading && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Thinking…
+                </div>
+              )}
               <div ref={endRef} />
             </div>
             <div className="border-t border-border/50 p-3">
@@ -92,12 +122,22 @@ export function AskAiFab() {
                 <Textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      send();
+                    }
+                  }}
                   placeholder="Ask anything…"
                   rows={1}
                   className="min-h-[40px] resize-none"
                 />
-                <Button onClick={send} disabled={loading || !input.trim()} size="icon" className="bg-gradient-to-r from-primary to-accent shrink-0">
+                <Button
+                  onClick={send}
+                  disabled={loading || !input.trim()}
+                  size="icon"
+                  className="bg-gradient-to-r from-primary to-accent shrink-0"
+                >
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
