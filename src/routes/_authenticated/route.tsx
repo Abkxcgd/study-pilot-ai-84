@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard, MessageSquare, FileText, BookOpen, Calendar as CalendarIcon,
   ListChecks, Layers, BarChart3, Settings, GraduationCap, LogOut, Menu, X, FileSearch, CalendarClock,
-  Timer, Mic, Trophy, Brain,
+  Timer, Mic, Trophy, Brain, Lightbulb, Briefcase, Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -22,7 +22,11 @@ export const Route = createFileRoute("/_authenticated")({
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chat", label: "AI Chat", icon: MessageSquare },
+  { to: "/tutor", label: "AI Tutor", icon: Lightbulb },
   { to: "/brain", label: "Second Brain", icon: Brain },
+  { to: "/insights", label: "AI Insights", icon: Sparkles },
+  { to: "/exam", label: "Exam Mode", icon: GraduationCap },
+  { to: "/career", label: "Career Assistant", icon: Briefcase },
   { to: "/notes", label: "Notes Summarizer", icon: FileText },
   { to: "/voice-notes", label: "Voice Notes", icon: Mic },
   { to: "/assignments", label: "Assignments", icon: BookOpen },
