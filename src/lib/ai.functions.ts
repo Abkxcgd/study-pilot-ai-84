@@ -205,3 +205,116 @@ export const aiFlashcards = createServerFn({ method: "POST" })
       return { cards: [] };
     }
   });
+
+// ============= V3: Exam Mode =============
+const ExamInput = z.object({
+  topic: z.string().min(2),
+  difficulty: z.enum(["easy", "medium", "hard"]).default("medium"),
+  count: z.number().int().min(3).max(20).default(8),
+  sourceText: z.string().optional(),
+});
+
+export const aiExam = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => ExamInput.parse(v))
+  .handler(async ({ data }) => {
+    const src = data.sourceText ? `\n\nBASE MATERIAL:\n${data.sourceText.slice(0, 12000)}` : "";
+    const prompt = `Generate a ${data.difficulty} difficulty mock exam on "${data.topic}" with ${data.count} multiple-choice questions. Cover a variety of subtopics. Return STRICT JSON:
+{ "questions": [ { "topic":"subtopic name","question":"...","options":["A","B","C","D"],"answerIndex":0,"explanation":"why this answer is correct" } ] }
+Return JSON only, no markdown fences.${src}`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      const j = JSON.parse(cleaned);
+      return { questions: Array.isArray(j.questions) ? j.questions : [] };
+    } catch {
+      return { questions: [] };
+    }
+  });
+
+// ============= V3: Career Assistant =============
+const CareerInput = z.object({
+  mode: z.enum(["analyze", "cover_letter", "linkedin", "interview"]),
+  resume: z.string().optional(),
+  jobDescription: z.string().optional(),
+  role: z.string().optional(),
+});
+
+export const aiCareer = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => CareerInput.parse(v))
+  .handler(async ({ data }) => {
+    let prompt = "";
+    if (data.mode === "analyze") {
+      prompt = `You are an ATS (Applicant Tracking System) expert. Analyze this resume${data.jobDescription ? " against the job description" : ""}. Return STRICT JSON:
+{ "atsScore": 0-100, "strengths": ["..."], "weaknesses": ["..."], "improvements": ["actionable rewrite tips"], "missingKeywords": ["..."], "summary": "2-sentence verdict" }
+RESUME:
+${(data.resume ?? "").slice(0, 12000)}
+${data.jobDescription ? `\nJOB:\n${data.jobDescription.slice(0, 4000)}` : ""}
+JSON only.`;
+    } else if (data.mode === "cover_letter") {
+      prompt = `Write a compelling, personalized cover letter for the role "${data.role ?? "the target role"}" using this resume. Keep it 3-4 short paragraphs, confident but genuine. Return plain markdown.
+RESUME:\n${(data.resume ?? "").slice(0, 8000)}
+${data.jobDescription ? `\nJOB:\n${data.jobDescription.slice(0, 3000)}` : ""}`;
+    } else if (data.mode === "linkedin") {
+      prompt = `Based on this resume, generate 5 punchy LinkedIn headline options (max 220 chars each). Return STRICT JSON: { "headlines": ["...", "..."] }. JSON only.
+RESUME:\n${(data.resume ?? "").slice(0, 6000)}`;
+    } else {
+      prompt = `Generate 10 realistic interview questions for the role "${data.role ?? "software engineer"}", mixing behavioral, technical, and situational. For each provide a strong sample answer outline. Return STRICT JSON: { "questions": [ { "question":"...","type":"behavioral|technical|situational","sampleAnswer":"..." } ] }. JSON only.`;
+    }
+    const { text } = await generateText({ model: getModel(), prompt });
+    if (data.mode === "cover_letter") return { content: text };
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try { return JSON.parse(cleaned); } catch { return { raw: cleaned }; }
+  });
+
+// ============= V3: AI Tutor =============
+const TutorInput = z.object({
+  concept: z.string().min(2),
+  level: z.enum(["beginner", "intermediate", "advanced"]).default("intermediate"),
+});
+
+export const aiTutor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => TutorInput.parse(v))
+  .handler(async ({ data }) => {
+    const prompt = `You are a world-class tutor. Explain "${data.concept}" for a ${data.level} learner. Structure the response as markdown with these sections in order:
+## Simple Explanation
+(2-3 sentences, plain language)
+## Step-by-Step
+(numbered breakdown)
+## Real-World Example
+(concrete relatable example)
+## Diagram
+Provide ONE mermaid diagram inside a fenced block \`\`\`mermaid ... \`\`\` that visualizes the concept (flowchart TD or sequenceDiagram).
+## Common Pitfalls
+(3 bullets)
+## Check Your Understanding
+(2 quick questions with answers)`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    return { content: text };
+  });
+
+// ============= V3: AI Insights =============
+const InsightsInput = z.object({
+  tasks: z.array(z.object({ title: z.string(), status: z.string(), priority: z.string().optional(), due_date: z.string().nullable().optional() })).default([]),
+  events: z.array(z.object({ title: z.string(), event_type: z.string().optional(), event_date: z.string() })).default([]),
+  stats: z.object({ xp: z.number(), level: z.number(), current_streak: z.number() }).optional(),
+  focusMinutes: z.number().optional(),
+  notesCount: z.number().optional(),
+});
+
+export const aiInsights = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => InsightsInput.parse(v))
+  .handler(async ({ data }) => {
+    const prompt = `You are a productivity coach. Given the student's activity below, produce STRICT JSON:
+{ "recommendations": ["3-5 short, specific, actionable tips"], "atRiskDeadlines": ["titles of tasks/events likely to be missed"], "weakSubjects": ["subjects/topics that need more attention"], "dailyGoal": "one crisp goal for today", "motivationalNote": "one sentence" }
+JSON only, no markdown.
+
+DATA:
+${JSON.stringify(data).slice(0, 8000)}`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try { return JSON.parse(cleaned); } catch { return { recommendations: [], atRiskDeadlines: [], weakSubjects: [], dailyGoal: "", motivationalNote: cleaned }; }
+  });
