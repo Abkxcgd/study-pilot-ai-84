@@ -123,7 +123,7 @@ function Dashboard() {
         <StatCard icon={ListChecks} label="Today's tasks" value={tasks.filter((t) => t.status !== "done").length} sub="pending" />
         <StatCard icon={Flame} label="Study streak" value={streak} sub="days" accent />
         <StatCard icon={TrendingUp} label="Level" value={level} sub={`${xp} XP total`} />
-        <StatCard icon={CalendarIcon} label="Upcoming" value={events.length} sub="deadlines" />
+        <StatCard icon={CalendarIcon} label={daysToExam !== null ? "Next exam in" : "Upcoming"} value={daysToExam !== null ? `${daysToExam}d` : events.length} sub={nextExam?.title ?? "deadlines"} />
       </div>
 
       {/* Shortcuts */}
