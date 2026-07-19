@@ -1,0 +1,12 @@
+{
+  "name": "StudyPilot AI",
+  "short_name": "StudyPilot",
+  "description": "AI productivity assistant for students.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#4F46E5",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }
+  ]
+}

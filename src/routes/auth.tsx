@@ -92,6 +92,39 @@ function AuthPage() {
           Continue with Google
         </Button>
 
+        <Button
+          variant="ghost"
+          disabled={loading}
+          onClick={async () => {
+            setLoading(true);
+            try {
+              const demoEmail = `demo+${Math.random().toString(36).slice(2, 10)}@studypilot.app`;
+              const demoPass = `Demo!${Math.random().toString(36).slice(2, 12)}`;
+              const { error } = await supabase.auth.signUp({
+                email: demoEmail,
+                password: demoPass,
+                options: { data: { full_name: "Demo Student" } },
+              });
+              if (error) throw error;
+              // Ensure a session (some projects require sign-in after sign-up)
+              if (!(await supabase.auth.getSession()).data.session) {
+                await supabase.auth.signInWithPassword({ email: demoEmail, password: demoPass });
+              }
+              const { seedDemoData } = await import("@/lib/demo-seed");
+              await seedDemoData();
+              toast.success("Demo account ready with sample data!");
+              navigate({ to: "/dashboard" });
+            } catch (e) {
+              toast.error(e instanceof Error ? e.message : "Demo mode failed");
+            } finally {
+              setLoading(false);
+            }
+          }}
+          className="mt-2 w-full text-primary-glow hover:text-primary"
+        >
+          ✨ Try Instant Demo (no signup)
+        </Button>
+
         <p className="mt-6 text-center text-xs text-muted-foreground">
           By continuing you agree to our Terms & Privacy Policy.
         </p>
