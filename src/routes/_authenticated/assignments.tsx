@@ -28,17 +28,16 @@ function Page() {
     try {
       const r = await gen({ data: { kind, topic, details } });
       setContent(r.content);
-    } catch (e: any) { toast.error(e?.message ?? "Failed"); }
-    finally { setLoading(false); }
+      await awardXp(XP.ASSIGNMENT_GENERATED, "Assignment ready");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Failed";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const download = (mime: string, ext: string) => {
-    const blob = new Blob([content], { type: mime });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${topic || "assignment"}.${ext}`;
-    a.click();
-  };
+
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
