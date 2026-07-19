@@ -7,14 +7,14 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("jspdf", () => ({
-  jsPDF: vi.fn().mockImplementation(() => ({
-    internal: { pageSize: { getWidth: () => 595 } },
-    setFont: vi.fn(),
-    setFontSize: vi.fn(),
-    text: mocks.textSpy,
-    splitTextToSize: (t: string) => t.split("\n"),
-    save: mocks.saveSpy,
-  })),
+  jsPDF: class {
+    internal = { pageSize: { getWidth: () => 595 } };
+    setFont = vi.fn();
+    setFontSize = vi.fn();
+    text = mocks.textSpy;
+    splitTextToSize = (t: string) => t.split("\n");
+    save = mocks.saveSpy;
+  },
 }));
 
 vi.mock("docx", () => ({
