@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import {
   MessageSquare, FileText, ListChecks, Calendar as CalendarIcon, TrendingUp,
   Layers, BookOpen, Sparkles, Flame, Trophy, Zap, Award, Timer, Mic,
+  GraduationCap, Briefcase, Lightbulb, Brain,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { BADGE_LABELS } from "@/lib/gamification";
