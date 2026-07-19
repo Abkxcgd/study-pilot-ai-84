@@ -26,6 +26,7 @@ type Result = {
 
 function NotesPage() {
   const summarize = useServerFn(aiSummarize);
+  const ingest = useServerFn(aiIngest);
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
