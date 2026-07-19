@@ -27,3 +27,8 @@ class RO {
 globalThis.ResizeObserver = globalThis.ResizeObserver || RO;
 // @ts-expect-error jsdom
 globalThis.IntersectionObserver = globalThis.IntersectionObserver || RO;
+
+// jsdom lacks scrollIntoView
+if (typeof Element !== "undefined" && !Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = function () {};
+}
