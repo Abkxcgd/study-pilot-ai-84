@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard, MessageSquare, FileText, BookOpen, Calendar as CalendarIcon,
   ListChecks, Layers, BarChart3, Settings, GraduationCap, LogOut, Menu, X, FileSearch, CalendarClock,
-  Timer, Mic, Trophy,
+  Timer, Mic, Trophy, Brain,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
