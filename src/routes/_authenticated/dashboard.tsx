@@ -123,7 +123,7 @@ function Dashboard() {
         <h2 className="font-semibold mb-4">Quick actions</h2>
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
           {shortcuts.map((s) => (
-            <Link key={s.to} to={s.to} className="glass rounded-xl p-4 hover:border-primary/40 transition-colors">
+            <Link key={s.to} to={s.to} className="glass hover-lift rounded-xl p-4 hover:border-primary/40">
               <div className={`grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br ${s.color}`}>
                 <s.icon className="h-5 w-5" />
               </div>
