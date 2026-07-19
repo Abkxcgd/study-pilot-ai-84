@@ -42,8 +42,13 @@ function TasksPage() {
   };
 
   const move = async (id: string, status: string) => {
+    const prev = tasks.find((t) => t.id === id);
     await supabase.from("tasks").update({ status }).eq("id", id);
     qc.invalidateQueries({ queryKey: ["tasks"] });
+    if (status === "done" && prev && prev.status !== "done") {
+      const { awardXp, XP } = await import("@/lib/gamification");
+      await awardXp(XP.TASK_DONE, "Task complete");
+    }
   };
   const del = async (id: string) => {
     await supabase.from("tasks").delete().eq("id", id);

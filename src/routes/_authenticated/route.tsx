@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard, MessageSquare, FileText, BookOpen, Calendar as CalendarIcon,
   ListChecks, Layers, BarChart3, Settings, GraduationCap, LogOut, Menu, X, FileSearch, CalendarClock,
+  Timer, Mic, Trophy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -22,12 +23,15 @@ const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chat", label: "AI Chat", icon: MessageSquare },
   { to: "/notes", label: "Notes Summarizer", icon: FileText },
+  { to: "/voice-notes", label: "Voice Notes", icon: Mic },
   { to: "/assignments", label: "Assignments", icon: BookOpen },
   { to: "/planner", label: "Study Planner", icon: CalendarClock },
   { to: "/tasks", label: "To-Do Board", icon: ListChecks },
   { to: "/calendar", label: "Calendar", icon: CalendarIcon },
+  { to: "/focus", label: "Focus Timer", icon: Timer },
   { to: "/flashcards", label: "Flashcards", icon: Layers },
   { to: "/pdf-chat", label: "PDF Chat", icon: FileSearch },
+  { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;

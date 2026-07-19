@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, BookOpen, Download, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { exportPdf, exportDocx } from "@/lib/exports";
+import { awardXp, XP } from "@/lib/gamification";
 
 export const Route = createFileRoute("/_authenticated/assignments")({ component: Page });
 
@@ -26,17 +28,16 @@ function Page() {
     try {
       const r = await gen({ data: { kind, topic, details } });
       setContent(r.content);
-    } catch (e: any) { toast.error(e?.message ?? "Failed"); }
-    finally { setLoading(false); }
+      await awardXp(XP.ASSIGNMENT_GENERATED, "Assignment ready");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Failed";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const download = (mime: string, ext: string) => {
-    const blob = new Blob([content], { type: mime });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${topic || "assignment"}.${ext}`;
-    a.click();
-  };
+
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -66,9 +67,8 @@ function Page() {
       {content && (
         <div className="glass rounded-2xl p-6">
           <div className="flex justify-end gap-2 mb-4">
-            <Button variant="outline" size="sm" onClick={() => download("text/markdown", "md")}><Download className="mr-2 h-4 w-4" />MD</Button>
-            <Button variant="outline" size="sm" onClick={() => download("application/msword", "doc")}><Download className="mr-2 h-4 w-4" />DOC</Button>
-            <Button variant="outline" size="sm" onClick={() => window.print()}><Download className="mr-2 h-4 w-4" />Print/PDF</Button>
+            <Button variant="outline" size="sm" onClick={() => exportPdf(topic || "assignment", content)}><Download className="mr-2 h-4 w-4" />PDF</Button>
+            <Button variant="outline" size="sm" onClick={() => exportDocx(topic || "assignment", content)}><Download className="mr-2 h-4 w-4" />DOCX</Button>
           </div>
           <div className="prose prose-invert max-w-none [&_pre]:bg-black/40 [&_pre]:rounded-lg [&_code]:text-accent">
             <ReactMarkdown>{content}</ReactMarkdown>
