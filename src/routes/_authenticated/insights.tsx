@@ -25,9 +25,9 @@ function InsightsPage() {
         supabase.from("events").select("title,event_type,event_date").gte("event_date", new Date().toISOString()).order("event_date").limit(20),
         supabase.from("user_stats").select("xp,level,current_streak").maybeSingle(),
         supabase.from("notes").select("id", { count: "exact", head: true }),
-        supabase.from("focus_sessions").select("duration_min").gte("started_at", new Date(Date.now() - 7 * 86400000).toISOString()),
+        supabase.from("focus_sessions").select("duration_minutes").gte("completed_at", new Date(Date.now() - 7 * 86400000).toISOString()),
       ]);
-      const focusMinutes = (focusRes.data ?? []).reduce((s, f) => s + (f.duration_min || 0), 0);
+      const focusMinutes = (focusRes.data ?? []).reduce((s, f) => s + (f.duration_minutes || 0), 0);
       const res = await run({ data: {
         tasks: tasksRes.data ?? [],
         events: eventsRes.data ?? [],
