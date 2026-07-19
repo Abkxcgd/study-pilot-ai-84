@@ -67,9 +67,8 @@ function Page() {
       {content && (
         <div className="glass rounded-2xl p-6">
           <div className="flex justify-end gap-2 mb-4">
-            <Button variant="outline" size="sm" onClick={() => download("text/markdown", "md")}><Download className="mr-2 h-4 w-4" />MD</Button>
-            <Button variant="outline" size="sm" onClick={() => download("application/msword", "doc")}><Download className="mr-2 h-4 w-4" />DOC</Button>
-            <Button variant="outline" size="sm" onClick={() => window.print()}><Download className="mr-2 h-4 w-4" />Print/PDF</Button>
+            <Button variant="outline" size="sm" onClick={() => exportPdf(topic || "assignment", content)}><Download className="mr-2 h-4 w-4" />PDF</Button>
+            <Button variant="outline" size="sm" onClick={() => exportDocx(topic || "assignment", content)}><Download className="mr-2 h-4 w-4" />DOCX</Button>
           </div>
           <div className="prose prose-invert max-w-none [&_pre]:bg-black/40 [&_pre]:rounded-lg [&_code]:text-accent">
             <ReactMarkdown>{content}</ReactMarkdown>
