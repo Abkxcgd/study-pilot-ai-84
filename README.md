@@ -69,14 +69,14 @@ Open http://localhost:8080
 
 The following are auto-provisioned by Lovable Cloud (do not edit manually):
 
-| Var | Purpose |
-| --- | --- |
-| `VITE_SUPABASE_URL` | Client Supabase URL |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | Client Supabase key |
-| `VITE_SUPABASE_PROJECT_ID` | Project reference |
-| `SUPABASE_URL` | Server Supabase URL |
-| `SUPABASE_PUBLISHABLE_KEY` | Server Supabase key |
-| `LOVABLE_API_KEY` | AI Gateway key (auto) |
+| Var                             | Purpose               |
+| ------------------------------- | --------------------- |
+| `VITE_SUPABASE_URL`             | Client Supabase URL   |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Client Supabase key   |
+| `VITE_SUPABASE_PROJECT_ID`      | Project reference     |
+| `SUPABASE_URL`                  | Server Supabase URL   |
+| `SUPABASE_PUBLISHABLE_KEY`      | Server Supabase key   |
+| `LOVABLE_API_KEY`               | AI Gateway key (auto) |
 
 For self-hosted deployments (e.g. Vercel), mirror these in your host's env settings.
 
@@ -84,18 +84,18 @@ For self-hosted deployments (e.g. Vercel), mirror these in your host's env setti
 
 All app-internal logic runs through **server functions** in `src/lib/*.functions.ts`:
 
-| Function | Purpose |
-| --- | --- |
-| `aiChat` | General chat completions |
-| `aiSummarize` | Notes → summary + flashcards + quiz |
-| `aiAssignment` | Assignment / report / PPT generator |
-| `aiPlanner` | Study plan generator |
-| `aiTutor` | Explanations + Mermaid diagrams |
-| `aiExam` | Adaptive mock exams |
-| `aiCareer` | Resume / cover letter / LinkedIn / interview |
-| `aiInsights` | Personalized productivity coaching |
-| `aiIngest` | Embeddings ingestion for RAG |
-| `aiSecondBrain` | RAG-grounded Q&A over user data |
+| Function        | Purpose                                      |
+| --------------- | -------------------------------------------- |
+| `aiChat`        | General chat completions                     |
+| `aiSummarize`   | Notes → summary + flashcards + quiz          |
+| `aiAssignment`  | Assignment / report / PPT generator          |
+| `aiPlanner`     | Study plan generator                         |
+| `aiTutor`       | Explanations + Mermaid diagrams              |
+| `aiExam`        | Adaptive mock exams                          |
+| `aiCareer`      | Resume / cover letter / LinkedIn / interview |
+| `aiInsights`    | Personalized productivity coaching           |
+| `aiIngest`      | Embeddings ingestion for RAG                 |
+| `aiSecondBrain` | RAG-grounded Q&A over user data              |
 
 Public routes under `src/routes/api/` (e.g. `/api/transcribe`) handle raw HTTP for audio transcription.
 

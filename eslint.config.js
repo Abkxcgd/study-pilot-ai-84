@@ -34,6 +34,18 @@ export default tseslint.config(
       ],
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      // Downgraded to warning: strictly forbidden `any` in a large app forces
+      // noisy `unknown` casts in error handlers and third-party interop. We
+      // still surface it so accidental usage is visible in CI.
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  },
+  {
+    // Tests legitimately need `any` for mocks and jsdom polyfills.
+    files: ["tests/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-constant-binary-expression": "off",
     },
   },
   eslintPluginPrettier,

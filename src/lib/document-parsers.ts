@@ -45,7 +45,7 @@ export async function parseImage(file: File, onProgress?: (p: number) => void): 
 
 export async function parseAny(
   file: File,
-  onProgress?: (p: number) => void
+  onProgress?: (p: number) => void,
 ): Promise<{ text: string; kind: "pdf" | "docx" | "image" | "text" }> {
   const name = file.name.toLowerCase();
   const type = file.type;

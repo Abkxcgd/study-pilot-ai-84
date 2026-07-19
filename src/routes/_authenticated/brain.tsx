@@ -74,7 +74,8 @@ function Page() {
           <Brain className="h-7 w-7 text-primary-glow" /> AI Second Brain
         </h1>
         <p className="text-muted-foreground mt-1">
-          Ask anything about your notes, tasks and events. Answers are grounded in your own material.
+          Ask anything about your notes, tasks and events. Answers are grounded in your own
+          material.
         </p>
       </div>
 
@@ -86,8 +87,16 @@ function Page() {
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && run()}
           />
-          <Button onClick={run} disabled={loading} className="bg-gradient-to-r from-primary to-accent">
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+          <Button
+            onClick={run}
+            disabled={loading}
+            className="bg-gradient-to-r from-primary to-accent"
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="h-4 w-4" />
+            )}
           </Button>
         </div>
       </div>
@@ -104,7 +113,9 @@ function Page() {
                 {sources.map((s, i) => (
                   <div key={s.id} className="text-xs bg-white/5 rounded-lg p-3">
                     <div className="flex justify-between text-muted-foreground mb-1">
-                      <span>[#{i + 1}] {s.metadata?.title ?? s.source_type}</span>
+                      <span>
+                        [#{i + 1}] {s.metadata?.title ?? s.source_type}
+                      </span>
                       <span>{Math.round(s.similarity * 100)}% match</span>
                     </div>
                     <p className="line-clamp-3">{s.content}</p>
@@ -132,7 +143,11 @@ function Page() {
           onChange={(e) => setIngestText(e.target.value)}
         />
         <Button onClick={addKnowledge} disabled={ingesting} variant="outline">
-          {ingesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+          {ingesting ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Upload className="mr-2 h-4 w-4" />
+          )}
           Index into Second Brain
         </Button>
       </div>

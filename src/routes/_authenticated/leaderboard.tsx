@@ -24,7 +24,9 @@ function LeaderboardPage() {
       <div className="glass rounded-2xl overflow-hidden">
         {isLoading && <div className="p-8 text-center text-muted-foreground text-sm">Loading…</div>}
         {!isLoading && rows.length === 0 && (
-          <div className="p-8 text-center text-muted-foreground text-sm">No scholars yet — be the first!</div>
+          <div className="p-8 text-center text-muted-foreground text-sm">
+            No scholars yet — be the first!
+          </div>
         )}
         <ul>
           {rows.map((r, i) => (
@@ -38,10 +40,15 @@ function LeaderboardPage() {
               }`}
             >
               <div className="w-8 text-center">
-                {i === 0 ? <Crown className="h-5 w-5 mx-auto text-warning" /> :
-                 i === 1 ? <Medal className="h-5 w-5 mx-auto text-muted-foreground" /> :
-                 i === 2 ? <Medal className="h-5 w-5 mx-auto text-orange-500" /> :
-                 <span className="text-sm text-muted-foreground">#{i + 1}</span>}
+                {i === 0 ? (
+                  <Crown className="h-5 w-5 mx-auto text-warning" />
+                ) : i === 1 ? (
+                  <Medal className="h-5 w-5 mx-auto text-muted-foreground" />
+                ) : i === 2 ? (
+                  <Medal className="h-5 w-5 mx-auto text-orange-500" />
+                ) : (
+                  <span className="text-sm text-muted-foreground">#{i + 1}</span>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="truncate font-medium">{r.display_name}</div>
@@ -51,7 +58,9 @@ function LeaderboardPage() {
                 <Flame className="h-4 w-4 text-orange-500" />
                 {r.current_streak}
               </div>
-              <div className="font-bold tabular-nums text-primary-glow min-w-16 text-right">{r.xp} XP</div>
+              <div className="font-bold tabular-nums text-primary-glow min-w-16 text-right">
+                {r.xp} XP
+              </div>
             </motion.li>
           ))}
         </ul>

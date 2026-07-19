@@ -10,7 +10,11 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/planner")({ component: Page });
 
-type Plan = { weekly: { day: string; blocks: { time: string; subject: string; goal: string }[] }[]; dailyGoals: string[]; tips: string[] };
+type Plan = {
+  weekly: { day: string; blocks: { time: string; subject: string; goal: string }[] }[];
+  dailyGoals: string[];
+  tips: string[];
+};
 
 function Page() {
   const planner = useServerFn(aiPlanner);
@@ -26,24 +30,55 @@ function Page() {
     try {
       const r = await planner({ data: { subjects, examDate: examDate || undefined, dailyHours } });
       setPlan(r as Plan);
-    } catch (e: any) { toast.error(e?.message ?? "Failed"); }
-    finally { setLoading(false); }
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2"><CalendarClock className="h-7 w-7 text-primary-glow" /> AI Study Planner</h1>
-        <p className="text-muted-foreground mt-1">Generate a smart weekly timetable tailored to your goals.</p>
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <CalendarClock className="h-7 w-7 text-primary-glow" /> AI Study Planner
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Generate a smart weekly timetable tailored to your goals.
+        </p>
       </div>
 
       <div className="glass rounded-2xl p-6 grid gap-4 md:grid-cols-3">
-        <div><Label>Subjects (comma separated)</Label><Input value={subjects} onChange={(e) => setSubjects(e.target.value)} /></div>
-        <div><Label>Exam date</Label><Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} /></div>
-        <div><Label>Daily study hours</Label><Input type="number" min={1} max={16} value={dailyHours} onChange={(e) => setDailyHours(+e.target.value)} /></div>
+        <div>
+          <Label>Subjects (comma separated)</Label>
+          <Input value={subjects} onChange={(e) => setSubjects(e.target.value)} />
+        </div>
+        <div>
+          <Label>Exam date</Label>
+          <Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} />
+        </div>
+        <div>
+          <Label>Daily study hours</Label>
+          <Input
+            type="number"
+            min={1}
+            max={16}
+            value={dailyHours}
+            onChange={(e) => setDailyHours(+e.target.value)}
+          />
+        </div>
         <div className="md:col-span-3">
-          <Button onClick={run} disabled={loading} className="bg-gradient-to-r from-primary to-accent">
-            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />} Generate my plan
+          <Button
+            onClick={run}
+            disabled={loading}
+            className="bg-gradient-to-r from-primary to-accent"
+          >
+            {loading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}{" "}
+            Generate my plan
           </Button>
         </div>
       </div>
@@ -80,7 +115,9 @@ function Page() {
             <div className="glass rounded-2xl p-5">
               <h3 className="font-semibold">Pro tips</h3>
               <ul className="mt-3 space-y-1 text-sm list-disc pl-5">
-                {plan.tips.map((t, i) => <li key={i}>{t}</li>)}
+                {plan.tips.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
               </ul>
             </div>
           )}

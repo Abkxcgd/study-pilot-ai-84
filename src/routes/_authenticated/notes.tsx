@@ -68,15 +68,19 @@ function NotesPage() {
       const { data: u } = await supabase.auth.getUser();
       let noteId: string | undefined;
       if (u.user) {
-        const { data: inserted } = await supabase.from("notes").insert({
-          user_id: u.user.id,
-          title: title || "Untitled",
-          source_text: text.slice(0, 5000),
-          summary: r.summary ?? null,
-          key_points: r.keyPoints ?? [],
-          flashcards: r.flashcards ?? [],
-          quiz: r.quiz ?? [],
-        }).select("id").single();
+        const { data: inserted } = await supabase
+          .from("notes")
+          .insert({
+            user_id: u.user.id,
+            title: title || "Untitled",
+            source_text: text.slice(0, 5000),
+            summary: r.summary ?? null,
+            key_points: r.keyPoints ?? [],
+            flashcards: r.flashcards ?? [],
+            quiz: r.quiz ?? [],
+          })
+          .select("id")
+          .single();
         noteId = inserted?.id;
       }
       await awardXp(XP.NOTE_SUMMARIZED, "Note summarized");
@@ -100,21 +104,33 @@ function NotesPage() {
   const buildExportBody = () => {
     if (!result) return "";
     let body = result.summary ? `SUMMARY\n\n${result.summary}\n\n` : "";
-    if (result.keyPoints?.length) body += `KEY POINTS\n\n${result.keyPoints.map((p) => `• ${p}`).join("\n")}\n\n`;
-    if (result.importantQuestions?.length) body += `IMPORTANT QUESTIONS\n\n${result.importantQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}\n\n`;
-    if (result.flashcards?.length) body += `FLASHCARDS\n\n${result.flashcards.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n")}\n\n`;
+    if (result.keyPoints?.length)
+      body += `KEY POINTS\n\n${result.keyPoints.map((p) => `• ${p}`).join("\n")}\n\n`;
+    if (result.importantQuestions?.length)
+      body += `IMPORTANT QUESTIONS\n\n${result.importantQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n")}\n\n`;
+    if (result.flashcards?.length)
+      body += `FLASHCARDS\n\n${result.flashcards.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n")}\n\n`;
     return body.trim();
   };
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2"><FileText className="h-7 w-7 text-primary-glow" /> Notes Summarizer</h1>
-        <p className="text-muted-foreground mt-1">Upload PDF, DOCX, images, or paste text. AI turns it into a summary, flashcards, and a quiz.</p>
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <FileText className="h-7 w-7 text-primary-glow" /> Notes Summarizer
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Upload PDF, DOCX, images, or paste text. AI turns it into a summary, flashcards, and a
+          quiz.
+        </p>
       </div>
 
       <div className="glass rounded-2xl p-6 space-y-4">
-        <Input placeholder="Title (optional)" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <Input
+          placeholder="Title (optional)"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <Textarea
           placeholder="Paste your notes, textbook chapter, article, or lecture transcript here…"
           value={text}
@@ -131,11 +147,21 @@ function NotesPage() {
               onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
             />
           </label>
-          <Button onClick={run} disabled={loading || parsing} className="bg-gradient-to-r from-primary to-accent">
-            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+          <Button
+            onClick={run}
+            disabled={loading || parsing}
+            className="bg-gradient-to-r from-primary to-accent"
+          >
+            {loading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
             Generate
           </Button>
-          <span className="text-xs text-muted-foreground">{text.length} chars {parseKind && `· from ${parseKind}`}</span>
+          <span className="text-xs text-muted-foreground">
+            {text.length} chars {parseKind && `· from ${parseKind}`}
+          </span>
         </div>
         {parsing && (
           <div className="space-y-1">
@@ -148,10 +174,18 @@ function NotesPage() {
       {result && (
         <>
           <div className="flex flex-wrap gap-2 justify-end">
-            <Button variant="outline" size="sm" onClick={() => exportPdf(title || "notes", buildExportBody())}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportPdf(title || "notes", buildExportBody())}
+            >
               <Download className="mr-2 h-4 w-4" /> Export PDF
             </Button>
-            <Button variant="outline" size="sm" onClick={() => exportDocx(title || "notes", buildExportBody())}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportDocx(title || "notes", buildExportBody())}
+            >
               <FileType className="mr-2 h-4 w-4" /> Export DOCX
             </Button>
           </div>
@@ -168,7 +202,9 @@ function NotesPage() {
                 <>
                   <h3 className="font-semibold mt-6 mb-2">Important questions</h3>
                   <ul className="list-disc pl-5 space-y-1 text-sm">
-                    {result.importantQuestions.map((q, i) => <li key={i}>{q}</li>)}
+                    {result.importantQuestions.map((q, i) => (
+                      <li key={i}>{q}</li>
+                    ))}
                   </ul>
                 </>
               )}
@@ -176,15 +212,22 @@ function NotesPage() {
             <TabsContent value="points" className="glass rounded-2xl p-6 mt-4">
               <ul className="space-y-2">
                 {result.keyPoints?.map((p, i) => (
-                  <li key={i} className="flex gap-3"><span className="text-primary-glow">•</span>{p}</li>
+                  <li key={i} className="flex gap-3">
+                    <span className="text-primary-glow">•</span>
+                    {p}
+                  </li>
                 ))}
               </ul>
             </TabsContent>
             <TabsContent value="flash" className="mt-4 grid gap-3 sm:grid-cols-2">
-              {result.flashcards?.map((c, i) => <Flashcard key={i} q={c.question} a={c.answer} />)}
+              {result.flashcards?.map((c, i) => (
+                <Flashcard key={i} q={c.question} a={c.answer} />
+              ))}
             </TabsContent>
             <TabsContent value="quiz" className="mt-4 space-y-3">
-              {result.quiz?.map((q, i) => <QuizItem key={i} q={q} />)}
+              {result.quiz?.map((q, i) => (
+                <QuizItem key={i} q={q} />
+              ))}
             </TabsContent>
           </Tabs>
         </>
@@ -196,7 +239,10 @@ function NotesPage() {
 function Flashcard({ q, a }: { q: string; a: string }) {
   const [flip, setFlip] = useState(false);
   return (
-    <button onClick={() => setFlip(!flip)} className="glass rounded-2xl p-5 text-left min-h-32 hover:border-primary/40">
+    <button
+      onClick={() => setFlip(!flip)}
+      className="glass rounded-2xl p-5 text-left min-h-32 hover:border-primary/40"
+    >
       <div className="text-xs text-muted-foreground">{flip ? "Answer" : "Question"}</div>
       <div className="mt-2">{flip ? a : q}</div>
     </button>
@@ -216,11 +262,15 @@ function QuizItem({ q }: { q: { question: string; options: string[]; answerIndex
               key={i}
               onClick={() => setPick(i)}
               className={`text-left rounded-lg border px-3 py-2 text-sm transition ${
-                correct ? "border-success bg-success/10" :
-                wrong ? "border-destructive bg-destructive/10" :
-                "border-border/40 hover:border-primary/40"
+                correct
+                  ? "border-success bg-success/10"
+                  : wrong
+                    ? "border-destructive bg-destructive/10"
+                    : "border-border/40 hover:border-primary/40"
               }`}
-            >{o}</button>
+            >
+              {o}
+            </button>
           );
         })}
       </div>

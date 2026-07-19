@@ -86,7 +86,10 @@ export const aiSecondBrain = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
     const ctx = (matches ?? [])
-      .map((m: { source_type: string; content: string }, i: number) => `[#${i + 1} ${m.source_type}] ${m.content}`)
+      .map(
+        (m: { source_type: string; content: string }, i: number) =>
+          `[#${i + 1} ${m.source_type}] ${m.content}`,
+      )
       .join("\n\n");
     const system =
       "You are the student's Second Brain. Answer using ONLY the provided context from their notes, tasks, and events. Cite sources like [#1]. If the answer is not in the context, say so and suggest what to upload.";
@@ -108,9 +111,10 @@ export const aiSecondBrain = createServerFn({ method: "POST" })
     };
   });
 
-
 const ChatInput = z.object({
-  messages: z.array(z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string() })),
+  messages: z.array(
+    z.object({ role: z.enum(["user", "assistant", "system"]), content: z.string() }),
+  ),
   system: z.string().optional(),
 });
 
@@ -265,7 +269,11 @@ RESUME:\n${(data.resume ?? "").slice(0, 6000)}`;
     const { text } = await generateText({ model: getModel(), prompt });
     if (data.mode === "cover_letter") return { content: text };
     const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
-    try { return JSON.parse(cleaned); } catch { return { raw: cleaned }; }
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return { raw: cleaned };
+    }
   });
 
 // ============= V3: AI Tutor =============
@@ -297,8 +305,21 @@ Provide ONE mermaid diagram inside a fenced block \`\`\`mermaid ... \`\`\` that 
 
 // ============= V3: AI Insights =============
 const InsightsInput = z.object({
-  tasks: z.array(z.object({ title: z.string(), status: z.string(), priority: z.string().optional(), due_date: z.string().nullable().optional() })).default([]),
-  events: z.array(z.object({ title: z.string(), event_type: z.string().optional(), event_date: z.string() })).default([]),
+  tasks: z
+    .array(
+      z.object({
+        title: z.string(),
+        status: z.string(),
+        priority: z.string().optional(),
+        due_date: z.string().nullable().optional(),
+      }),
+    )
+    .default([]),
+  events: z
+    .array(
+      z.object({ title: z.string(), event_type: z.string().optional(), event_date: z.string() }),
+    )
+    .default([]),
   stats: z.object({ xp: z.number(), level: z.number(), current_streak: z.number() }).optional(),
   focusMinutes: z.number().optional(),
   notesCount: z.number().optional(),
@@ -316,5 +337,15 @@ DATA:
 ${JSON.stringify(data).slice(0, 8000)}`;
     const { text } = await generateText({ model: getModel(), prompt });
     const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
-    try { return JSON.parse(cleaned); } catch { return { recommendations: [], atRiskDeadlines: [], weakSubjects: [], dailyGoal: "", motivationalNote: cleaned }; }
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return {
+        recommendations: [],
+        atRiskDeadlines: [],
+        weakSubjects: [],
+        dailyGoal: "",
+        motivationalNote: cleaned,
+      };
+    }
   });

@@ -7,21 +7,25 @@ V2 is a large scope. Rather than ship everything half-built, I'll deliver it in 
 These have no external OAuth dependencies and unlock the biggest UX wins.
 
 **Document ingestion (client-side parsing, then AI summarize)**
+
 - **PDF** → `pdfjs-dist` extracts text in the browser.
 - **DOCX** → `mammoth` extracts raw text.
 - **Images** → `tesseract.js` OCR (English by default; language pack lazy-loaded).
 - Wire all three into the existing Notes Summarizer with progress states.
 
 **Voice Notes**
+
 - Recording uses `MediaRecorder` → uploads WAV/webm to a new server function.
 - Transcription via **Lovable AI STT** (`openai/gpt-4o-transcribe`, streaming SSE) — no user API key needed.
 - Auto-summarize transcript with existing summarize pipeline.
 
 **Exports**
+
 - Summary/assignment export to **PDF** via `jspdf` and **DOCX** via `docx`.
 - Client-side generation — no server round trip.
 
 **Gamification**
+
 - New tables: `user_stats` (xp, level, current_streak, longest_streak, last_active_date), `user_badges`.
 - XP awarded on: task completion, notes summarized, flashcard quiz score, study session (Pomodoro).
 - Streak recomputed on any XP event.
@@ -30,10 +34,12 @@ These have no external OAuth dependencies and unlock the biggest UX wins.
 - Dashboard widget: XP bar, level, streak flame, badges grid.
 
 **Pomodoro Focus Timer**
+
 - New route `/focus`. Configurable work/break lengths (default 25/5), long break every 4 cycles.
 - Awards XP on completed work interval; logs a `focus_session` row for analytics.
 
 **Real Analytics**
+
 - Rebuild `/analytics` on `focus_sessions`, `tasks` (completed count/day), `notes` (created/day), `chat_messages` (AI usage), `user_stats`. Real Recharts, no demo values.
 
 ## Phase 2 — AI Second Brain (RAG over user data)
@@ -47,12 +53,13 @@ These have no external OAuth dependencies and unlock the biggest UX wins.
 
 Google Calendar / Drive / Gmail can be wired two different ways. **This is the one thing I need you to pick** because it changes the whole setup:
 
-- **A. Builder-owned (App Connectors)** — you connect *your* Google account once, and every StudyPilot user sees data from *your* Google account. Fine for a personal/demo app, wrong for a real multi-user product.
-- **B. Per-user (App User Connectors)** — each StudyPilot user connects *their own* Google account and sees their own Calendar/Drive/Gmail. Requires you to register one Google OAuth client (I'll walk you through the console steps). This is the correct model for a real student productivity app.
+- **A. Builder-owned (App Connectors)** — you connect _your_ Google account once, and every StudyPilot user sees data from _your_ Google account. Fine for a personal/demo app, wrong for a real multi-user product.
+- **B. Per-user (App User Connectors)** — each StudyPilot user connects _their own_ Google account and sees their own Calendar/Drive/Gmail. Requires you to register one Google OAuth client (I'll walk you through the console steps). This is the correct model for a real student productivity app.
 
 I'll assume **B (per-user)** unless you say otherwise, and I'll pause at the start of Phase 3 to have you run through the OAuth client setup.
 
 Scope in phase 3:
+
 - Calendar: two-way sync of `events` with Google Calendar (import upcoming, export study plan sessions).
 - Drive: import documents into Notes Summarizer directly by picking a Drive file.
 - Gmail: read-only assistant that surfaces academic emails (deadlines, professor mail) into the Second Brain.
