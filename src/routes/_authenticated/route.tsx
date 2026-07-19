@@ -22,6 +22,7 @@ export const Route = createFileRoute("/_authenticated")({
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chat", label: "AI Chat", icon: MessageSquare },
+  { to: "/brain", label: "Second Brain", icon: Brain },
   { to: "/notes", label: "Notes Summarizer", icon: FileText },
   { to: "/voice-notes", label: "Voice Notes", icon: Mic },
   { to: "/assignments", label: "Assignments", icon: BookOpen },
