@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, BookOpen, Download, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { exportPdf, exportDocx } from "@/lib/exports";
+import { awardXp, XP } from "@/lib/gamification";
 
 export const Route = createFileRoute("/_authenticated/assignments")({ component: Page });
 
