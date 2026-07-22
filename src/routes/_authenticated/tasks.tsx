@@ -104,7 +104,19 @@ function TasksPage() {
             Drag & drop tasks across columns. Set priorities and deadlines.
           </p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <div className="flex items-center gap-2">
+          <Select value={priorityFilter} onValueChange={(v) => setPriorityFilter(v as any)}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Filter" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All priorities</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+            </SelectContent>
+          </Select>
+          <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="bg-gradient-to-r from-primary to-accent">
               <Plus className="mr-2 h-4 w-4" />
