@@ -41,12 +41,22 @@ function TasksPage() {
   });
 
   const [open, setOpen] = useState(false);
+  const [priorityFilter, setPriorityFilter] = useState<"all" | "low" | "medium" | "high">("all");
   const [form, setForm] = useState({
     title: "",
     description: "",
     priority: "medium",
     due_date: "",
   });
+  const priRank = { high: 0, medium: 1, low: 2 } as const;
+  const visible = tasks
+    .filter((t: any) => priorityFilter === "all" || t.priority === priorityFilter)
+    .slice()
+    .sort(
+      (a: any, b: any) =>
+        (priRank[a.priority as keyof typeof priRank] ?? 3) -
+        (priRank[b.priority as keyof typeof priRank] ?? 3),
+    );
 
   const create = async () => {
     if (!form.title) return;
