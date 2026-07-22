@@ -311,7 +311,7 @@ export default function Landing() {
           {pricing.map((p) => (
             <div
               key={p.name}
-              className={`glass rounded-2xl p-8 ${p.highlight ? "border-primary/60 glow" : ""}`}
+              className={`glass hover-lift rounded-2xl p-8 ${p.highlight ? "border-primary/60 glow" : ""}`}
             >
               {p.highlight && (
                 <div className="mb-4 inline-block rounded-full bg-gradient-to-r from-primary to-accent px-3 py-1 text-xs font-semibold">
