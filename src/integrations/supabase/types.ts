@@ -527,6 +527,7 @@ export type Database = {
         Args: { _group_id: string; _user_id: string }
         Returns: boolean
       }
+      join_group_by_code: { Args: { _code: string }; Returns: string }
       match_embeddings: {
         Args: {
           match_count?: number
