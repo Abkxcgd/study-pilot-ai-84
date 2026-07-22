@@ -14,8 +14,9 @@ import {
   Cell,
   Tooltip,
 } from "recharts";
-import { BarChart3, TrendingUp, Clock, Target, Zap, Flame } from "lucide-react";
+import { BarChart3, TrendingUp, Clock, Target, Zap, Flame, CalendarDays } from "lucide-react";
 import { format, subDays, startOfDay } from "date-fns";
+import { StudyHeatmap } from "@/components/StudyHeatmap";
 
 export const Route = createFileRoute("/_authenticated/analytics")({ component: Page });
 
@@ -26,11 +27,16 @@ function Page() {
     queryKey: ["analytics"],
     queryFn: async () => {
       const since = subDays(new Date(), 6).toISOString();
-      const [sessions, tasks, notes, messages, stats] = await Promise.all([
+      const since90 = subDays(new Date(), 90).toISOString();
+      const [sessions, sessions90, tasks, notes, messages, stats] = await Promise.all([
         supabase
           .from("focus_sessions")
           .select("duration_minutes, completed_at")
           .gte("completed_at", since),
+        supabase
+          .from("focus_sessions")
+          .select("duration_minutes, completed_at")
+          .gte("completed_at", since90),
         supabase.from("tasks").select("status, updated_at").gte("updated_at", since),
         supabase.from("notes").select("created_at").gte("created_at", since),
         supabase.from("chat_messages").select("id, created_at").gte("created_at", since),
@@ -38,6 +44,7 @@ function Page() {
       ]);
       return {
         sessions: sessions.data ?? [],
+        sessions90: sessions90.data ?? [],
         tasks: tasks.data ?? [],
         notes: notes.data ?? [],
         messages: messages.data ?? [],
@@ -144,6 +151,12 @@ function Page() {
               />
             </LineChart>
           </ResponsiveContainer>
+        </div>
+        <div className="glass rounded-2xl p-6 lg:col-span-2">
+          <h2 className="font-semibold mb-4 flex items-center gap-2">
+            <CalendarDays className="h-4 w-4 text-primary-glow" /> Study heatmap (last 90 days)
+          </h2>
+          <StudyHeatmap sessions={data?.sessions90 ?? []} />
         </div>
         <div className="glass rounded-2xl p-6 lg:col-span-2">
           <h2 className="font-semibold mb-4">Activity breakdown</h2>

@@ -41,12 +41,22 @@ function TasksPage() {
   });
 
   const [open, setOpen] = useState(false);
+  const [priorityFilter, setPriorityFilter] = useState<"all" | "low" | "medium" | "high">("all");
   const [form, setForm] = useState({
     title: "",
     description: "",
     priority: "medium",
     due_date: "",
   });
+  const priRank = { high: 0, medium: 1, low: 2 } as const;
+  const visible = tasks
+    .filter((t: any) => priorityFilter === "all" || t.priority === priorityFilter)
+    .slice()
+    .sort(
+      (a: any, b: any) =>
+        (priRank[a.priority as keyof typeof priRank] ?? 3) -
+        (priRank[b.priority as keyof typeof priRank] ?? 3),
+    );
 
   const create = async () => {
     if (!form.title) return;
@@ -94,7 +104,19 @@ function TasksPage() {
             Drag & drop tasks across columns. Set priorities and deadlines.
           </p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <div className="flex items-center gap-2">
+          <Select value={priorityFilter} onValueChange={(v) => setPriorityFilter(v as any)}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Filter" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All priorities</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+            </SelectContent>
+          </Select>
+          <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="bg-gradient-to-r from-primary to-accent">
               <Plus className="mr-2 h-4 w-4" />
@@ -152,6 +174,7 @@ function TasksPage() {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -163,7 +186,7 @@ function TasksPage() {
             className="glass rounded-2xl p-4 min-h-96"
           >
             <div className={`text-sm font-semibold mb-3 ${col.color}`}>
-              {col.label} · {tasks.filter((t: any) => t.status === col.key).length}
+              {col.label} · {visible.filter((t: any) => t.status === col.key).length}
             </div>
             <div className="space-y-2">
               {tasks
@@ -212,7 +235,7 @@ function TasksPage() {
                     </div>
                   </div>
                 ))}
-              {tasks.filter((t: any) => t.status === col.key).length === 0 && (
+              {visible.filter((t: any) => t.status === col.key).length === 0 && (
                 <div className="text-center text-xs text-muted-foreground py-8">
                   Drop tasks here
                 </div>
