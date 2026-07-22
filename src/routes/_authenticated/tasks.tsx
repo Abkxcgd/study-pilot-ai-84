@@ -186,7 +186,7 @@ function TasksPage() {
             className="glass rounded-2xl p-4 min-h-96"
           >
             <div className={`text-sm font-semibold mb-3 ${col.color}`}>
-              {col.label} · {tasks.filter((t: any) => t.status === col.key).length}
+              {col.label} · {visible.filter((t: any) => t.status === col.key).length}
             </div>
             <div className="space-y-2">
               {tasks
@@ -235,7 +235,7 @@ function TasksPage() {
                     </div>
                   </div>
                 ))}
-              {tasks.filter((t: any) => t.status === col.key).length === 0 && (
+              {visible.filter((t: any) => t.status === col.key).length === 0 && (
                 <div className="text-center text-xs text-muted-foreground py-8">
                   Drop tasks here
                 </div>
