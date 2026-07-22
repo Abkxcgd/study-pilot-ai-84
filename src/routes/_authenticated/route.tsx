@@ -58,6 +58,7 @@ const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chat", label: "AI Chat", icon: MessageSquare },
   { to: "/tutor", label: "AI Tutor", icon: Lightbulb },
+  { to: "/voice-tutor", label: "Voice Tutor", icon: Mic },
   { to: "/brain", label: "Second Brain", icon: Brain },
   { to: "/insights", label: "AI Insights", icon: Sparkles },
   { to: "/exam", label: "Exam Mode", icon: GraduationCap },
