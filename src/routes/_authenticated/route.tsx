@@ -38,6 +38,7 @@ import {
   Target,
   RefreshCw,
   HelpCircle,
+  PenLine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -71,6 +72,7 @@ const nav = [
   { to: "/mock-interview", label: "Mock Interview", icon: MessageSquareQuote },
   { to: "/roadmap", label: "Career Roadmap", icon: Map },
   { to: "/notes", label: "Notes Summarizer", icon: FileText },
+  { to: "/handwriting", label: "Handwriting OCR", icon: PenLine },
   { to: "/voice-notes", label: "Voice Notes", icon: Mic },
   { to: "/assignments", label: "Assignments", icon: BookOpen },
   { to: "/planner", label: "Study Planner", icon: CalendarClock },

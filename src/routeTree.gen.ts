@@ -32,6 +32,7 @@ import { Route as AuthenticatedMockInterviewRouteImport } from './routes/_authen
 import { Route as AuthenticatedMindmapRouteImport } from './routes/_authenticated/mindmap'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
+import { Route as AuthenticatedHandwritingRouteImport } from './routes/_authenticated/handwriting'
 import { Route as AuthenticatedFocusRouteImport } from './routes/_authenticated/focus'
 import { Route as AuthenticatedFlashcardsRouteImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedExamRouteImport } from './routes/_authenticated/exam'
@@ -161,6 +162,12 @@ const AuthenticatedInsightsRoute = AuthenticatedInsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHandwritingRoute =
+  AuthenticatedHandwritingRouteImport.update({
+    id: '/handwriting',
+    path: '/handwriting',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedFocusRoute = AuthenticatedFocusRouteImport.update({
   id: '/focus',
   path: '/focus',
@@ -236,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/exam': typeof AuthenticatedExamRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/focus': typeof AuthenticatedFocusRoute
+  '/handwriting': typeof AuthenticatedHandwritingRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mindmap': typeof AuthenticatedMindmapRoute
@@ -271,6 +279,7 @@ export interface FileRoutesByTo {
   '/exam': typeof AuthenticatedExamRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/focus': typeof AuthenticatedFocusRoute
+  '/handwriting': typeof AuthenticatedHandwritingRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/mindmap': typeof AuthenticatedMindmapRoute
@@ -308,6 +317,7 @@ export interface FileRoutesById {
   '/_authenticated/exam': typeof AuthenticatedExamRoute
   '/_authenticated/flashcards': typeof AuthenticatedFlashcardsRoute
   '/_authenticated/focus': typeof AuthenticatedFocusRoute
+  '/_authenticated/handwriting': typeof AuthenticatedHandwritingRoute
   '/_authenticated/insights': typeof AuthenticatedInsightsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/mindmap': typeof AuthenticatedMindmapRoute
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/exam'
     | '/flashcards'
     | '/focus'
+    | '/handwriting'
     | '/insights'
     | '/leaderboard'
     | '/mindmap'
@@ -380,6 +391,7 @@ export interface FileRouteTypes {
     | '/exam'
     | '/flashcards'
     | '/focus'
+    | '/handwriting'
     | '/insights'
     | '/leaderboard'
     | '/mindmap'
@@ -416,6 +428,7 @@ export interface FileRouteTypes {
     | '/_authenticated/exam'
     | '/_authenticated/flashcards'
     | '/_authenticated/focus'
+    | '/_authenticated/handwriting'
     | '/_authenticated/insights'
     | '/_authenticated/leaderboard'
     | '/_authenticated/mindmap'
@@ -608,6 +621,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInsightsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/handwriting': {
+      id: '/_authenticated/handwriting'
+      path: '/handwriting'
+      fullPath: '/handwriting'
+      preLoaderRoute: typeof AuthenticatedHandwritingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/focus': {
       id: '/_authenticated/focus'
       path: '/focus'
@@ -700,6 +720,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedExamRoute: typeof AuthenticatedExamRoute
   AuthenticatedFlashcardsRoute: typeof AuthenticatedFlashcardsRoute
   AuthenticatedFocusRoute: typeof AuthenticatedFocusRoute
+  AuthenticatedHandwritingRoute: typeof AuthenticatedHandwritingRoute
   AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedMindmapRoute: typeof AuthenticatedMindmapRoute
@@ -730,6 +751,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedExamRoute: AuthenticatedExamRoute,
   AuthenticatedFlashcardsRoute: AuthenticatedFlashcardsRoute,
   AuthenticatedFocusRoute: AuthenticatedFocusRoute,
+  AuthenticatedHandwritingRoute: AuthenticatedHandwritingRoute,
   AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedMindmapRoute: AuthenticatedMindmapRoute,
