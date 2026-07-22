@@ -39,6 +39,7 @@ import {
   RefreshCw,
   HelpCircle,
   PenLine,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -81,6 +82,7 @@ const nav = [
   { to: "/focus", label: "Focus Timer", icon: Timer },
   { to: "/flashcards", label: "Flashcards", icon: Layers },
   { to: "/pdf-chat", label: "PDF Chat", icon: FileSearch },
+  { to: "/groups", label: "Study Groups", icon: Users },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },
