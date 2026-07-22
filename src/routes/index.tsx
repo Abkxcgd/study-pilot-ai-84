@@ -176,7 +176,11 @@ export default function Landing() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 pt-16 pb-24 lg:grid-cols-2 lg:pt-24">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-primary/25 blur-3xl animate-pulse" />
+          <div className="absolute -bottom-24 -right-24 h-[28rem] w-[28rem] rounded-full bg-accent/20 blur-3xl" />
+        </div>
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 pt-14 pb-20 sm:pt-16 sm:pb-24 lg:grid-cols-2 lg:gap-12 lg:pt-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -186,31 +190,31 @@ export default function Landing() {
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border/60 bg-white/5 px-3 py-1 text-xs">
               <Sparkles className="h-3.5 w-3.5 text-accent" /> Powered by Gemini
             </div>
-            <h1 className="mt-6 text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
+            <h1 className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
               Study Smarter.
               <br />
               <span className="text-gradient">Learn Faster.</span>
               <br />
               Achieve More.
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+            <p className="mt-5 max-w-xl text-base text-muted-foreground sm:mt-6 sm:text-lg">
               The all-in-one AI productivity assistant for students. Summarize notes, generate
               assignments, plan study sessions, and organize your entire academic life —
               beautifully.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap gap-3 sm:mt-8">
               <Link to="/auth">
-                <Button size="lg" className="bg-gradient-to-r from-primary to-accent glow">
+                <Button size="lg" className="bg-gradient-to-r from-primary to-accent glow hover-lift">
                   Start free <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
               </Link>
               <a href="#features">
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" className="hover-lift">
                   Explore features
                 </Button>
               </a>
             </div>
-            <div className="mt-8 flex items-center gap-6 text-sm text-muted-foreground">
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground sm:mt-8">
               <div className="flex items-center gap-2">
                 <Check className="h-4 w-4 text-success" /> No credit card
               </div>
@@ -225,10 +229,15 @@ export default function Landing() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="relative"
           >
-            <div className="glass overflow-hidden rounded-3xl">
+            <div className="glass overflow-hidden rounded-3xl hover-lift">
               <img src={hero} alt="StudyPilot AI dashboard preview" className="w-full" />
             </div>
-            <div className="absolute -bottom-6 -left-6 glass rounded-2xl p-4 hidden sm:block">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="absolute -bottom-6 -left-6 glass rounded-2xl p-4 hidden sm:block"
+            >
               <div className="flex items-center gap-3">
                 <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/20">
                   <Zap className="h-5 w-5 text-primary" />
@@ -238,7 +247,7 @@ export default function Landing() {
                   <div className="font-semibold">+87% this week</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
