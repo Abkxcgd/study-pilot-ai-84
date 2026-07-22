@@ -16,6 +16,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
+import { Route as AuthenticatedVoiceTutorRouteImport } from './routes/_authenticated/voice-tutor'
 import { Route as AuthenticatedVoiceNotesRouteImport } from './routes/_authenticated/voice-notes'
 import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/tutor'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
@@ -76,6 +77,11 @@ const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
   id: '/api/transcribe',
   path: '/api/transcribe',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedVoiceTutorRoute = AuthenticatedVoiceTutorRouteImport.update({
+  id: '/voice-tutor',
+  path: '/voice-tutor',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedVoiceNotesRoute = AuthenticatedVoiceNotesRouteImport.update({
   id: '/voice-notes',
@@ -245,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof AuthenticatedTasksRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/voice-notes': typeof AuthenticatedVoiceNotesRoute
+  '/voice-tutor': typeof AuthenticatedVoiceTutorRoute
   '/api/transcribe': typeof ApiTranscribeRoute
 }
 export interface FileRoutesByTo {
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/voice-notes': typeof AuthenticatedVoiceNotesRoute
+  '/voice-tutor': typeof AuthenticatedVoiceTutorRoute
   '/api/transcribe': typeof ApiTranscribeRoute
 }
 export interface FileRoutesById {
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/_authenticated/tutor': typeof AuthenticatedTutorRoute
   '/_authenticated/voice-notes': typeof AuthenticatedVoiceNotesRoute
+  '/_authenticated/voice-tutor': typeof AuthenticatedVoiceTutorRoute
   '/api/transcribe': typeof ApiTranscribeRoute
 }
 export interface FileRouteTypes {
@@ -351,6 +360,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/tutor'
     | '/voice-notes'
+    | '/voice-tutor'
     | '/api/transcribe'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -385,6 +395,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/tutor'
     | '/voice-notes'
+    | '/voice-tutor'
     | '/api/transcribe'
   id:
     | '__root__'
@@ -420,6 +431,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks'
     | '/_authenticated/tutor'
     | '/_authenticated/voice-notes'
+    | '/_authenticated/voice-tutor'
     | '/api/transcribe'
   fileRoutesById: FileRoutesById
 }
@@ -483,6 +495,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/transcribe'
       preLoaderRoute: typeof ApiTranscribeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/voice-tutor': {
+      id: '/_authenticated/voice-tutor'
+      path: '/voice-tutor'
+      fullPath: '/voice-tutor'
+      preLoaderRoute: typeof AuthenticatedVoiceTutorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/voice-notes': {
       id: '/_authenticated/voice-notes'
@@ -696,6 +715,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedTutorRoute: typeof AuthenticatedTutorRoute
   AuthenticatedVoiceNotesRoute: typeof AuthenticatedVoiceNotesRoute
+  AuthenticatedVoiceTutorRoute: typeof AuthenticatedVoiceTutorRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -725,6 +745,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedTutorRoute: AuthenticatedTutorRoute,
   AuthenticatedVoiceNotesRoute: AuthenticatedVoiceNotesRoute,
+  AuthenticatedVoiceTutorRoute: AuthenticatedVoiceTutorRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

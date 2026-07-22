@@ -636,3 +636,32 @@ export const aiDoubtSolver = createServerFn({ method: "POST" })
     const j = (await res.json()) as { choices: { message: { content: string } }[] };
     return { answer: j.choices?.[0]?.message?.content ?? "" };
   });
+
+// ============= Voice Tutor =============
+const VoiceTutorInput = z.object({
+  messages: z.array(
+    z.object({
+      role: z.enum(["user", "assistant"]),
+      content: z.string(),
+    }),
+  ).min(1),
+  subject: z.string().optional(),
+});
+
+export const aiVoiceTutor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => VoiceTutorInput.parse(v))
+  .handler(async ({ data }) => {
+    const system = `You are StudyPilot Voice Tutor — a friendly, patient tutor speaking OUT LOUD to a student${data.subject ? ` about ${data.subject}` : ""}. Rules:
+- Keep replies SHORT (2-4 sentences, under 60 words) so they're comfortable to listen to.
+- Plain conversational language. No markdown, no bullets, no code fences, no emojis.
+- Use natural spoken numbers ("one third", not "1/3") and spell out short formulas.
+- If the concept is complex, teach it in tiny steps and end with one check-in question.
+- If the student sounds stuck, offer a simpler analogy.`;
+    const { text } = await generateText({
+      model: getModel(),
+      system,
+      messages: data.messages,
+    });
+    return { text };
+  });
