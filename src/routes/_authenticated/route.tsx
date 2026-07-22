@@ -42,6 +42,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { AskAiFab } from "@/components/AskAiFab";
+import { NotificationBell } from "@/components/NotificationBell";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
