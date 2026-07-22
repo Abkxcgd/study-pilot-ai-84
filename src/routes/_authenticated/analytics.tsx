@@ -153,6 +153,12 @@ function Page() {
           </ResponsiveContainer>
         </div>
         <div className="glass rounded-2xl p-6 lg:col-span-2">
+          <h2 className="font-semibold mb-4 flex items-center gap-2">
+            <CalendarDays className="h-4 w-4 text-primary-glow" /> Study heatmap (last 90 days)
+          </h2>
+          <StudyHeatmap sessions={data?.sessions90 ?? []} />
+        </div>
+        <div className="glass rounded-2xl p-6 lg:col-span-2">
           <h2 className="font-semibold mb-4">Activity breakdown</h2>
           {usage.length === 0 ? (
             <p className="text-sm text-muted-foreground py-8 text-center">
