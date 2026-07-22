@@ -178,7 +178,7 @@ function AuthedLayout() {
           <div className="font-semibold">
             StudyPilot <span className="text-gradient">AI</span>
           </div>
-          <div className="w-9" />
+          <NotificationBell />
         </header>
         <main key={location} className="p-4 sm:p-6 lg:p-8">
           <Outlet />
