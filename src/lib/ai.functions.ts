@@ -486,3 +486,153 @@ ${JSON.stringify(data).slice(0, 8000)}`;
       };
     }
   });
+
+// ============= V6: Mind Map Generator =============
+const MindMapInput = z.object({
+  topic: z.string().min(2),
+  style: z.enum(["mindmap", "flowchart", "tree"]).default("mindmap"),
+});
+
+export const aiMindMap = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => MindMapInput.parse(v))
+  .handler(async ({ data }) => {
+    const styleHint =
+      data.style === "flowchart"
+        ? "Use `flowchart TD` syntax with 8-15 nodes and clear arrows showing process/dependency."
+        : data.style === "tree"
+          ? "Use `flowchart TD` syntax as a hierarchical concept tree, 3-4 levels deep."
+          : "Use `mindmap` syntax with a root and 4-6 main branches, each with 2-4 sub-branches.";
+    const prompt = `Create a Mermaid diagram for the topic "${data.topic}". ${styleHint}
+Return STRICT JSON: { "title": "...", "mermaid": "the complete mermaid code, no fences", "summary": "3-sentence explanation" }
+JSON only, no markdown fences around the JSON.`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      const j = JSON.parse(cleaned);
+      // Strip any accidental fences inside the mermaid field
+      if (typeof j.mermaid === "string") {
+        j.mermaid = j.mermaid.replace(/^```(?:mermaid)?\s*|\s*```$/g, "").trim();
+      }
+      return j;
+    } catch {
+      return { title: data.topic, mermaid: "", summary: cleaned };
+    }
+  });
+
+// ============= V6: Exam Predictor =============
+const PredictorInput = z.object({
+  subjects: z.string().optional(),
+  recentScores: z
+    .array(z.object({ topic: z.string(), score: z.number(), total: z.number() }))
+    .default([]),
+  weeklyStudyHours: z.number().default(0),
+  daysToExam: z.number().default(30),
+});
+
+export const aiExamPredictor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => PredictorInput.parse(v))
+  .handler(async ({ data }) => {
+    const prompt = `You are an academic performance analyst. Based on the student's recent quiz results and study patterns, predict likely exam outcomes. Return STRICT JSON:
+{
+  "predictedScore": 0-100,
+  "confidence": "low|medium|high",
+  "weakTopics": [{ "topic": "...", "reason": "...", "priority": "high|medium|low" }],
+  "strongTopics": ["..."],
+  "recommendations": ["4-6 specific, time-bounded actions"],
+  "riskLevel": "low|medium|high"
+}
+JSON only, no markdown.
+
+DATA:
+${JSON.stringify(data).slice(0, 6000)}`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return {
+        predictedScore: 0,
+        confidence: "low",
+        weakTopics: [],
+        strongTopics: [],
+        recommendations: [cleaned],
+        riskLevel: "medium",
+      };
+    }
+  });
+
+// ============= V6: Smart Revision Planner =============
+const RevisionInput = z.object({
+  topics: z.string().min(2),
+  examDate: z.string().optional(),
+  hoursPerDay: z.number().min(0.5).max(12).default(2),
+});
+
+export const aiRevisionPlan = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => RevisionInput.parse(v))
+  .handler(async ({ data }) => {
+    const prompt = `Build a spaced-repetition revision plan. Topics: ${data.topics}. Exam date: ${data.examDate ?? "in 4 weeks"}. Daily hours: ${data.hoursPerDay}. Use the 1-3-7-14 day interval strategy. Return STRICT JSON:
+{
+  "daily": [{ "date": "YYYY-MM-DD or Day 1", "topics": ["..."], "focusMinutes": 90, "type": "learn|revise|test" }],
+  "weekly": [{ "week": 1, "focus": "...", "milestones": ["..."] }],
+  "monthly": { "goal": "...", "checkpoints": ["..."] },
+  "tips": ["..."]
+}
+Cover at least 14 days. JSON only, no markdown.`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return { daily: [], weekly: [], monthly: { goal: cleaned, checkpoints: [] }, tips: [] };
+    }
+  });
+
+// ============= V6: Doubt Solver (multimodal) =============
+const DoubtInput = z.object({
+  question: z.string().optional(),
+  imageDataUrl: z.string().optional(),
+  subject: z.enum(["math", "code", "science", "general"]).default("general"),
+});
+
+export const aiDoubtSolver = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => DoubtInput.parse(v))
+  .handler(async ({ data }) => {
+    if (!data.question && !data.imageDataUrl) {
+      throw new Error("Provide a question or upload an image.");
+    }
+    const system = `You are an expert ${data.subject} tutor. Solve the student's doubt with a clear, step-by-step explanation using markdown. For math, show every step and final answer. For code, explain the bug and provide corrected code in a fenced block. For diagrams, describe what's shown before solving.`;
+    const userContent: Array<
+      { type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }
+    > = [];
+    if (data.question) userContent.push({ type: "text", text: data.question });
+    if (data.imageDataUrl)
+      userContent.push({ type: "image_url", image_url: { url: data.imageDataUrl } });
+    if (!data.question)
+      userContent.unshift({ type: "text", text: "Solve the problem shown in this image." });
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getKey()}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: userContent },
+        ],
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`Doubt solver failed [${res.status}]: ${body}`);
+    }
+    const j = (await res.json()) as { choices: { message: { content: string } }[] };
+    return { answer: j.choices?.[0]?.message?.content ?? "" };
+  });
