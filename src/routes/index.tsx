@@ -268,7 +268,7 @@ export default function Landing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              className="glass rounded-2xl p-6 hover:border-primary/40 transition-colors"
+              className="glass hover-lift rounded-2xl p-6 hover:border-primary/40"
             >
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
                 <f.icon className="h-5 w-5 text-primary-glow" />
@@ -285,7 +285,7 @@ export default function Landing() {
         <h2 className="text-center text-4xl font-bold">Loved by students worldwide</h2>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
-            <div key={t.name} className="glass rounded-2xl p-6">
+            <div key={t.name} className="glass hover-lift rounded-2xl p-6">
               <p className="text-sm leading-relaxed">"{t.quote}"</p>
               <div className="mt-6 flex items-center gap-3">
                 <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-primary to-accent font-semibold">
