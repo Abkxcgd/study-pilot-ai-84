@@ -276,6 +276,143 @@ RESUME:\n${(data.resume ?? "").slice(0, 6000)}`;
     }
   });
 
+// ============= V5: Career Roadmap =============
+const RoadmapInput = z.object({
+  career: z.string().min(2),
+  currentLevel: z.enum(["beginner", "intermediate", "advanced"]).default("beginner"),
+  timeframeMonths: z.number().int().min(1).max(36).default(12),
+});
+
+export const aiRoadmap = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => RoadmapInput.parse(v))
+  .handler(async ({ data }) => {
+    const prompt = `You are a senior career coach. Build a detailed learning roadmap to become a "${data.career}" in ${data.timeframeMonths} months, starting from ${data.currentLevel} level. Return STRICT JSON:
+{
+  "overview": "2-3 sentence intro",
+  "phases": [
+    { "title": "Phase 1: Foundations", "durationWeeks": 4, "skills": ["..."], "courses": [{"name":"..","provider":".."}], "certifications": ["..."], "projects": ["..."], "milestone": "what you'll be able to do" }
+  ],
+  "topSkills": ["..."],
+  "salaryRange": "e.g. $60k-$95k in the US",
+  "tips": ["..."]
+}
+Provide 4-6 phases covering the full timeframe. JSON only, no markdown.`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return { overview: cleaned, phases: [], topSkills: [], salaryRange: "", tips: [] };
+    }
+  });
+
+// ============= V5: Resume Builder =============
+const ResumeBuildInput = z.object({
+  fullName: z.string().min(1),
+  title: z.string().optional(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  location: z.string().optional(),
+  links: z.string().optional(),
+  targetRole: z.string().optional(),
+  experience: z.string().optional(),
+  education: z.string().optional(),
+  skills: z.string().optional(),
+  projects: z.string().optional(),
+});
+
+export const aiResumeBuild = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => ResumeBuildInput.parse(v))
+  .handler(async ({ data }) => {
+    const prompt = `You are an ATS-optimized resume writer. Build a strong, keyword-rich resume for the target role "${data.targetRole ?? "the applicant's field"}". Rewrite the user's raw inputs into concise, action-verb bullet points with quantified impact where possible. Return STRICT JSON:
+{
+  "summary": "3-4 line professional summary tailored to the target role",
+  "skills": ["8-14 skills"],
+  "experience": [{ "role":"..","company":"..","dates":"..","bullets":["3-5 STAR bullets"] }],
+  "projects": [{ "name":"..","stack":"..","bullets":["2-3 bullets"] }],
+  "education": [{ "degree":"..","school":"..","dates":".." }],
+  "atsScore": 0-100,
+  "atsTips": ["3-5 improvement tips"]
+}
+JSON only, no markdown.
+
+USER DATA:
+${JSON.stringify(data).slice(0, 8000)}`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return {
+        summary: cleaned,
+        skills: [],
+        experience: [],
+        projects: [],
+        education: [],
+        atsScore: 0,
+        atsTips: [],
+      };
+    }
+  });
+
+// ============= V5: Mock Interview =============
+const MockInterviewInput = z.object({
+  action: z.enum(["start", "feedback"]),
+  role: z.string().min(1),
+  type: z.enum(["hr", "technical", "mixed"]).default("mixed"),
+  count: z.number().int().min(3).max(12).default(6),
+  qa: z
+    .array(z.object({ question: z.string(), answer: z.string() }))
+    .optional(),
+});
+
+export const aiMockInterview = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => MockInterviewInput.parse(v))
+  .handler(async ({ data }) => {
+    if (data.action === "start") {
+      const prompt = `Generate ${data.count} realistic ${data.type} interview questions for a "${data.role}" role. Mix easy/medium/hard. Return STRICT JSON: { "questions": ["...", "..."] }. JSON only.`;
+      const { text } = await generateText({ model: getModel(), prompt });
+      const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+      try {
+        const j = JSON.parse(cleaned);
+        return { questions: Array.isArray(j.questions) ? j.questions : [] };
+      } catch {
+        return { questions: [] };
+      }
+    }
+    const transcript = (data.qa ?? [])
+      .map((x, i) => `Q${i + 1}: ${x.question}\nA${i + 1}: ${x.answer || "(no answer)"}`)
+      .join("\n\n");
+    const prompt = `You are a hiring manager evaluating a mock interview for "${data.role}". For EACH answer, grade 0-10 and give one-line feedback. Then produce an overall score and top improvements. Return STRICT JSON:
+{
+  "perQuestion": [{ "score": 0-10, "feedback": "..." }],
+  "overallScore": 0-100,
+  "strengths": ["..."],
+  "improvements": ["..."],
+  "verdict": "1-2 sentence summary"
+}
+JSON only, no markdown.
+
+TRANSCRIPT:
+${transcript}`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return {
+        perQuestion: [],
+        overallScore: 0,
+        strengths: [],
+        improvements: [],
+        verdict: cleaned,
+      };
+    }
+  });
+
 // ============= V3: AI Tutor =============
 const TutorInput = z.object({
   concept: z.string().min(2),
