@@ -21,16 +21,20 @@ import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedRoadmapRouteImport } from './routes/_authenticated/roadmap'
+import { Route as AuthenticatedRevisionRouteImport } from './routes/_authenticated/revision'
 import { Route as AuthenticatedResumeBuilderRouteImport } from './routes/_authenticated/resume-builder'
+import { Route as AuthenticatedPredictorRouteImport } from './routes/_authenticated/predictor'
 import { Route as AuthenticatedPlannerRouteImport } from './routes/_authenticated/planner'
 import { Route as AuthenticatedPdfChatRouteImport } from './routes/_authenticated/pdf-chat'
 import { Route as AuthenticatedNotesRouteImport } from './routes/_authenticated/notes'
 import { Route as AuthenticatedMockInterviewRouteImport } from './routes/_authenticated/mock-interview'
+import { Route as AuthenticatedMindmapRouteImport } from './routes/_authenticated/mindmap'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
 import { Route as AuthenticatedFocusRouteImport } from './routes/_authenticated/focus'
 import { Route as AuthenticatedFlashcardsRouteImport } from './routes/_authenticated/flashcards'
 import { Route as AuthenticatedExamRouteImport } from './routes/_authenticated/exam'
+import { Route as AuthenticatedDoubtSolverRouteImport } from './routes/_authenticated/doubt-solver'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedChatRouteImport } from './routes/_authenticated/chat'
 import { Route as AuthenticatedCareerRouteImport } from './routes/_authenticated/career'
@@ -98,12 +102,22 @@ const AuthenticatedRoadmapRoute = AuthenticatedRoadmapRouteImport.update({
   path: '/roadmap',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRevisionRoute = AuthenticatedRevisionRouteImport.update({
+  id: '/revision',
+  path: '/revision',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedResumeBuilderRoute =
   AuthenticatedResumeBuilderRouteImport.update({
     id: '/resume-builder',
     path: '/resume-builder',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPredictorRoute = AuthenticatedPredictorRouteImport.update({
+  id: '/predictor',
+  path: '/predictor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPlannerRoute = AuthenticatedPlannerRouteImport.update({
   id: '/planner',
   path: '/planner',
@@ -125,6 +139,11 @@ const AuthenticatedMockInterviewRoute =
     path: '/mock-interview',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMindmapRoute = AuthenticatedMindmapRouteImport.update({
+  id: '/mindmap',
+  path: '/mindmap',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedLeaderboardRoute =
   AuthenticatedLeaderboardRouteImport.update({
     id: '/leaderboard',
@@ -151,6 +170,12 @@ const AuthenticatedExamRoute = AuthenticatedExamRouteImport.update({
   path: '/exam',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDoubtSolverRoute =
+  AuthenticatedDoubtSolverRouteImport.update({
+    id: '/doubt-solver',
+    path: '/doubt-solver',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -201,16 +226,20 @@ export interface FileRoutesByFullPath {
   '/career': typeof AuthenticatedCareerRoute
   '/chat': typeof AuthenticatedChatRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doubt-solver': typeof AuthenticatedDoubtSolverRoute
   '/exam': typeof AuthenticatedExamRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/focus': typeof AuthenticatedFocusRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/mindmap': typeof AuthenticatedMindmapRoute
   '/mock-interview': typeof AuthenticatedMockInterviewRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/pdf-chat': typeof AuthenticatedPdfChatRoute
   '/planner': typeof AuthenticatedPlannerRoute
+  '/predictor': typeof AuthenticatedPredictorRoute
   '/resume-builder': typeof AuthenticatedResumeBuilderRoute
+  '/revision': typeof AuthenticatedRevisionRoute
   '/roadmap': typeof AuthenticatedRoadmapRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -231,16 +260,20 @@ export interface FileRoutesByTo {
   '/career': typeof AuthenticatedCareerRoute
   '/chat': typeof AuthenticatedChatRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doubt-solver': typeof AuthenticatedDoubtSolverRoute
   '/exam': typeof AuthenticatedExamRoute
   '/flashcards': typeof AuthenticatedFlashcardsRoute
   '/focus': typeof AuthenticatedFocusRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/mindmap': typeof AuthenticatedMindmapRoute
   '/mock-interview': typeof AuthenticatedMockInterviewRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/pdf-chat': typeof AuthenticatedPdfChatRoute
   '/planner': typeof AuthenticatedPlannerRoute
+  '/predictor': typeof AuthenticatedPredictorRoute
   '/resume-builder': typeof AuthenticatedResumeBuilderRoute
+  '/revision': typeof AuthenticatedRevisionRoute
   '/roadmap': typeof AuthenticatedRoadmapRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -263,16 +296,20 @@ export interface FileRoutesById {
   '/_authenticated/career': typeof AuthenticatedCareerRoute
   '/_authenticated/chat': typeof AuthenticatedChatRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/doubt-solver': typeof AuthenticatedDoubtSolverRoute
   '/_authenticated/exam': typeof AuthenticatedExamRoute
   '/_authenticated/flashcards': typeof AuthenticatedFlashcardsRoute
   '/_authenticated/focus': typeof AuthenticatedFocusRoute
   '/_authenticated/insights': typeof AuthenticatedInsightsRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/_authenticated/mindmap': typeof AuthenticatedMindmapRoute
   '/_authenticated/mock-interview': typeof AuthenticatedMockInterviewRoute
   '/_authenticated/notes': typeof AuthenticatedNotesRoute
   '/_authenticated/pdf-chat': typeof AuthenticatedPdfChatRoute
   '/_authenticated/planner': typeof AuthenticatedPlannerRoute
+  '/_authenticated/predictor': typeof AuthenticatedPredictorRoute
   '/_authenticated/resume-builder': typeof AuthenticatedResumeBuilderRoute
+  '/_authenticated/revision': typeof AuthenticatedRevisionRoute
   '/_authenticated/roadmap': typeof AuthenticatedRoadmapRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
@@ -295,16 +332,20 @@ export interface FileRouteTypes {
     | '/career'
     | '/chat'
     | '/dashboard'
+    | '/doubt-solver'
     | '/exam'
     | '/flashcards'
     | '/focus'
     | '/insights'
     | '/leaderboard'
+    | '/mindmap'
     | '/mock-interview'
     | '/notes'
     | '/pdf-chat'
     | '/planner'
+    | '/predictor'
     | '/resume-builder'
+    | '/revision'
     | '/roadmap'
     | '/settings'
     | '/tasks'
@@ -325,16 +366,20 @@ export interface FileRouteTypes {
     | '/career'
     | '/chat'
     | '/dashboard'
+    | '/doubt-solver'
     | '/exam'
     | '/flashcards'
     | '/focus'
     | '/insights'
     | '/leaderboard'
+    | '/mindmap'
     | '/mock-interview'
     | '/notes'
     | '/pdf-chat'
     | '/planner'
+    | '/predictor'
     | '/resume-builder'
+    | '/revision'
     | '/roadmap'
     | '/settings'
     | '/tasks'
@@ -356,16 +401,20 @@ export interface FileRouteTypes {
     | '/_authenticated/career'
     | '/_authenticated/chat'
     | '/_authenticated/dashboard'
+    | '/_authenticated/doubt-solver'
     | '/_authenticated/exam'
     | '/_authenticated/flashcards'
     | '/_authenticated/focus'
     | '/_authenticated/insights'
     | '/_authenticated/leaderboard'
+    | '/_authenticated/mindmap'
     | '/_authenticated/mock-interview'
     | '/_authenticated/notes'
     | '/_authenticated/pdf-chat'
     | '/_authenticated/planner'
+    | '/_authenticated/predictor'
     | '/_authenticated/resume-builder'
+    | '/_authenticated/revision'
     | '/_authenticated/roadmap'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
@@ -470,11 +519,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoadmapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/revision': {
+      id: '/_authenticated/revision'
+      path: '/revision'
+      fullPath: '/revision'
+      preLoaderRoute: typeof AuthenticatedRevisionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/resume-builder': {
       id: '/_authenticated/resume-builder'
       path: '/resume-builder'
       fullPath: '/resume-builder'
       preLoaderRoute: typeof AuthenticatedResumeBuilderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/predictor': {
+      id: '/_authenticated/predictor'
+      path: '/predictor'
+      fullPath: '/predictor'
+      preLoaderRoute: typeof AuthenticatedPredictorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/planner': {
@@ -503,6 +566,13 @@ declare module '@tanstack/react-router' {
       path: '/mock-interview'
       fullPath: '/mock-interview'
       preLoaderRoute: typeof AuthenticatedMockInterviewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mindmap': {
+      id: '/_authenticated/mindmap'
+      path: '/mindmap'
+      fullPath: '/mindmap'
+      preLoaderRoute: typeof AuthenticatedMindmapRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/leaderboard': {
@@ -538,6 +608,13 @@ declare module '@tanstack/react-router' {
       path: '/exam'
       fullPath: '/exam'
       preLoaderRoute: typeof AuthenticatedExamRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/doubt-solver': {
+      id: '/_authenticated/doubt-solver'
+      path: '/doubt-solver'
+      fullPath: '/doubt-solver'
+      preLoaderRoute: typeof AuthenticatedDoubtSolverRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -600,16 +677,20 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCareerRoute: typeof AuthenticatedCareerRoute
   AuthenticatedChatRoute: typeof AuthenticatedChatRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDoubtSolverRoute: typeof AuthenticatedDoubtSolverRoute
   AuthenticatedExamRoute: typeof AuthenticatedExamRoute
   AuthenticatedFlashcardsRoute: typeof AuthenticatedFlashcardsRoute
   AuthenticatedFocusRoute: typeof AuthenticatedFocusRoute
   AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
+  AuthenticatedMindmapRoute: typeof AuthenticatedMindmapRoute
   AuthenticatedMockInterviewRoute: typeof AuthenticatedMockInterviewRoute
   AuthenticatedNotesRoute: typeof AuthenticatedNotesRoute
   AuthenticatedPdfChatRoute: typeof AuthenticatedPdfChatRoute
   AuthenticatedPlannerRoute: typeof AuthenticatedPlannerRoute
+  AuthenticatedPredictorRoute: typeof AuthenticatedPredictorRoute
   AuthenticatedResumeBuilderRoute: typeof AuthenticatedResumeBuilderRoute
+  AuthenticatedRevisionRoute: typeof AuthenticatedRevisionRoute
   AuthenticatedRoadmapRoute: typeof AuthenticatedRoadmapRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
@@ -625,16 +706,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCareerRoute: AuthenticatedCareerRoute,
   AuthenticatedChatRoute: AuthenticatedChatRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDoubtSolverRoute: AuthenticatedDoubtSolverRoute,
   AuthenticatedExamRoute: AuthenticatedExamRoute,
   AuthenticatedFlashcardsRoute: AuthenticatedFlashcardsRoute,
   AuthenticatedFocusRoute: AuthenticatedFocusRoute,
   AuthenticatedInsightsRoute: AuthenticatedInsightsRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
+  AuthenticatedMindmapRoute: AuthenticatedMindmapRoute,
   AuthenticatedMockInterviewRoute: AuthenticatedMockInterviewRoute,
   AuthenticatedNotesRoute: AuthenticatedNotesRoute,
   AuthenticatedPdfChatRoute: AuthenticatedPdfChatRoute,
   AuthenticatedPlannerRoute: AuthenticatedPlannerRoute,
+  AuthenticatedPredictorRoute: AuthenticatedPredictorRoute,
   AuthenticatedResumeBuilderRoute: AuthenticatedResumeBuilderRoute,
+  AuthenticatedRevisionRoute: AuthenticatedRevisionRoute,
   AuthenticatedRoadmapRoute: AuthenticatedRoadmapRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
