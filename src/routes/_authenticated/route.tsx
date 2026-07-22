@@ -38,6 +38,7 @@ import {
   Target,
   RefreshCw,
   HelpCircle,
+  PenLine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
