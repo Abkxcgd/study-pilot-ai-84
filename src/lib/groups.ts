@@ -50,24 +50,13 @@ export async function createGroup(name: string, description?: string): Promise<S
 }
 
 export async function joinByCode(code: string): Promise<StudyGroup> {
-  const { data: user } = await supabase.auth.getUser();
-  if (!user.user) throw new Error("Not signed in");
-  // Fetch via head-less RPC-style: rely on invite_code unique + SELECT policy
-  // (members-only). We can't SELECT before joining, so try insert and let RLS check membership.
-  // Workaround: use a security definer? For now, attempt a direct lookup by invite_code
-  // through a permissive path — we allow authenticated to look up group by exact code
-  // via a targeted policy is not set. Use RPC alternative: read via anon-safe join.
-  const { data: group, error: findErr } = await supabase
-    .from("study_groups")
-    .select("*")
-    .eq("invite_code", code.trim().toUpperCase())
-    .maybeSingle();
-  if (findErr || !group) throw new Error("Invalid invite code");
-  const { error } = await supabase
-    .from("study_group_members")
-    .insert({ group_id: group.id, user_id: user.user.id });
-  if (error && !String(error.message).includes("duplicate")) throw error;
-  return group as StudyGroup;
+  const { data: gid, error: rpcErr } = await supabase.rpc("join_group_by_code", {
+    _code: code.trim().toUpperCase(),
+  });
+  if (rpcErr || !gid) throw new Error(rpcErr?.message ?? "Invalid invite code");
+  const group = await getGroup(gid as string);
+  if (!group) throw new Error("Group not found");
+  return group;
 }
 
 export async function leaveGroup(groupId: string) {
