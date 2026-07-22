@@ -34,6 +34,10 @@ import {
   Map,
   FileUser,
   MessageSquareQuote,
+  Network,
+  Target,
+  RefreshCw,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -56,6 +60,10 @@ const nav = [
   { to: "/brain", label: "Second Brain", icon: Brain },
   { to: "/insights", label: "AI Insights", icon: Sparkles },
   { to: "/exam", label: "Exam Mode", icon: GraduationCap },
+  { to: "/predictor", label: "Exam Predictor", icon: Target },
+  { to: "/mindmap", label: "Mind Maps", icon: Network },
+  { to: "/revision", label: "Revision Planner", icon: RefreshCw },
+  { to: "/doubt-solver", label: "Doubt Solver", icon: HelpCircle },
   { to: "/career", label: "Career Assistant", icon: Briefcase },
   { to: "/resume-builder", label: "Resume Builder", icon: FileUser },
   { to: "/mock-interview", label: "Mock Interview", icon: MessageSquareQuote },
