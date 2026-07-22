@@ -115,14 +115,17 @@ function AuthedLayout() {
         className={`${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 fixed lg:sticky top-0 z-40 h-screen w-64 shrink-0 border-r border-sidebar-border bg-sidebar/80 backdrop-blur-xl transition-transform duration-300 ease-out`}
       >
         <div className="flex h-full flex-col p-4">
-          <Link to="/dashboard" className="group flex items-center gap-2 px-2 py-2">
-            <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-primary to-accent transition-transform group-hover:scale-105">
-              <GraduationCap className="h-5 w-5" />
-            </div>
-            <span className="font-semibold">
-              StudyPilot <span className="text-gradient">AI</span>
-            </span>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link to="/dashboard" className="group flex items-center gap-2 px-2 py-2">
+              <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-primary to-accent transition-transform group-hover:scale-105">
+                <GraduationCap className="h-5 w-5" />
+              </div>
+              <span className="font-semibold">
+                StudyPilot <span className="text-gradient">AI</span>
+              </span>
+            </Link>
+            <NotificationBell />
+          </div>
           <nav className="mt-6 flex flex-col gap-1 overflow-y-auto pr-1 -mr-1">
             {nav.map((item) => {
               const active = location.startsWith(item.to);
