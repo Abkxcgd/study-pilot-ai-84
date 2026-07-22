@@ -27,11 +27,16 @@ function Page() {
     queryKey: ["analytics"],
     queryFn: async () => {
       const since = subDays(new Date(), 6).toISOString();
-      const [sessions, tasks, notes, messages, stats] = await Promise.all([
+      const since90 = subDays(new Date(), 90).toISOString();
+      const [sessions, sessions90, tasks, notes, messages, stats] = await Promise.all([
         supabase
           .from("focus_sessions")
           .select("duration_minutes, completed_at")
           .gte("completed_at", since),
+        supabase
+          .from("focus_sessions")
+          .select("duration_minutes, completed_at")
+          .gte("completed_at", since90),
         supabase.from("tasks").select("status, updated_at").gte("updated_at", since),
         supabase.from("notes").select("created_at").gte("created_at", since),
         supabase.from("chat_messages").select("id, created_at").gte("created_at", since),
@@ -39,6 +44,7 @@ function Page() {
       ]);
       return {
         sessions: sessions.data ?? [],
+        sessions90: sessions90.data ?? [],
         tasks: tasks.data ?? [],
         notes: notes.data ?? [],
         messages: messages.data ?? [],
