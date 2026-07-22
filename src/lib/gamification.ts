@@ -48,7 +48,16 @@ export async function awardXp(points: number, reason?: string) {
     await supabase
       .from("user_badges")
       .insert(newBadges.map((b) => ({ user_id: u.user!.id, badge_key: b.key })));
-    newBadges.forEach((b) => toast.success(`🏆 Badge unlocked: ${b.label}`, { duration: 4000 }));
+    for (const b of newBadges) {
+      toast.success(`🏆 Badge unlocked: ${b.label}`, { duration: 4000 });
+      await pushNotification({
+        kind: "badge",
+        title: `Badge unlocked: ${b.label}`,
+        body: "Keep up the momentum — new challenges are waiting.",
+        link: "/leaderboard",
+        icon: "Award",
+      });
+    }
   }
   return stats;
 }
