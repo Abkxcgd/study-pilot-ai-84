@@ -31,6 +31,9 @@ import {
   Lightbulb,
   Briefcase,
   Sparkles,
+  Map,
+  FileUser,
+  MessageSquareQuote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -54,6 +57,9 @@ const nav = [
   { to: "/insights", label: "AI Insights", icon: Sparkles },
   { to: "/exam", label: "Exam Mode", icon: GraduationCap },
   { to: "/career", label: "Career Assistant", icon: Briefcase },
+  { to: "/resume-builder", label: "Resume Builder", icon: FileUser },
+  { to: "/mock-interview", label: "Mock Interview", icon: MessageSquareQuote },
+  { to: "/roadmap", label: "Career Roadmap", icon: Map },
   { to: "/notes", label: "Notes Summarizer", icon: FileText },
   { to: "/voice-notes", label: "Voice Notes", icon: Mic },
   { to: "/assignments", label: "Assignments", icon: BookOpen },
