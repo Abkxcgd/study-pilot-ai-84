@@ -14,8 +14,9 @@ import {
   Cell,
   Tooltip,
 } from "recharts";
-import { BarChart3, TrendingUp, Clock, Target, Zap, Flame } from "lucide-react";
+import { BarChart3, TrendingUp, Clock, Target, Zap, Flame, CalendarDays } from "lucide-react";
 import { format, subDays, startOfDay } from "date-fns";
+import { StudyHeatmap } from "@/components/StudyHeatmap";
 
 export const Route = createFileRoute("/_authenticated/analytics")({ component: Page });
 
