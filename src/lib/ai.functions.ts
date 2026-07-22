@@ -665,3 +665,31 @@ export const aiVoiceTutor = createServerFn({ method: "POST" })
     });
     return { text };
   });
+
+// ============= Handwriting cleanup =============
+const HandwritingInput = z.object({
+  rawText: z.string().min(1),
+  subject: z.string().optional(),
+});
+
+export const aiCleanHandwriting = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => HandwritingInput.parse(v))
+  .handler(async ({ data }) => {
+    const prompt = `You are cleaning noisy OCR output from handwritten student notes${data.subject ? ` (subject: ${data.subject})` : ""}. The text has typos, broken words, wrong line breaks, and OCR artifacts. Return STRICT JSON only, no markdown fences, with keys:
+- cleaned (string): the notes rewritten cleanly with proper spelling, punctuation, paragraphs and (if useful) markdown headings/bullets. Preserve meaning; do not invent facts.
+- title (string): a short 3-6 word title.
+- summary (string): 2-3 sentence overview.
+- keyPoints (string[]): 4-8 bullet takeaways.
+- corrections (string[]): 0-6 short notes about obvious OCR fixes you made (e.g. "read 'enrgy' as 'energy'"). Omit if none.
+
+RAW OCR TEXT:
+${data.rawText.slice(0, 12000)}`;
+    const { text } = await generateText({ model: getModel(), prompt });
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      return { cleaned, title: "Handwritten note", summary: "", keyPoints: [], corrections: [] };
+    }
+  });
